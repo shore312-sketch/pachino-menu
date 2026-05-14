@@ -1,66 +1,65 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+"use client";
 
-export default function Home() {
+import { useEffect, useState } from "react";
+
+type MenuItem = {
+  set_label: string;
+  dishes: string;
+  price: string;
+  note: string;
+};
+
+export default function MenuDisplay() {
+  const [menu, setMenu] = useState<MenuItem[]>([]);
+
+  async function fetchMenu() {
+    try {
+      const res = await fetch("/api/menu", { cache: "no-store" });
+      if (res.ok) setMenu(await res.json());
+    } catch {
+      // ネットワークエラー時はそのまま表示維持
+    }
+  }
+
+  useEffect(() => {
+    fetchMenu();
+    // 1分ごとに最新メニューを取得
+    const id = setInterval(fetchMenu, 60_000);
+    return () => clearInterval(id);
+  }, []);
+
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className={styles.intro}>
-          <h1>To get started, edit the page.tsx file.</h1>
-          <p>
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <div className="board-wrap">
+      <div className="board">
+        <p className="board-header">本日のランチ</p>
+        <hr className="divider" />
+
+        <div className="menu-sections">
+          {menu.map((item, i) => (
+            <div key={item.set_label}>
+              {i > 0 && <hr className="section-divider" />}
+              <div className="menu-section">
+                <div className="set-header">
+                  <span className="set-label">{item.set_label}定食</span>
+                  {item.note && (
+                    <span className="set-badge">{item.note}</span>
+                  )}
+                </div>
+                <p className="set-dishes">{item.dishes}</p>
+                <div className="set-price-row">
+                  <span className="set-price">¥{item.price}</span>
+                </div>
+              </div>
+            </div>
+          ))}
+
+          {menu.length === 0 && (
+            <p style={{ color: "rgba(245,240,228,0.5)", textAlign: "center", fontSize: "clamp(0.8rem,2vmin,1rem)" }}>
+              準備中です
+            </p>
+          )}
         </div>
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className={styles.secondary}
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+      </div>
     </div>
   );
 }
