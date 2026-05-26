@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>メニュー開発の仕事 はじめ方ロードマップ</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "Hiragino Kaku Gothic ProN", "Noto Sans JP", sans-serif;
+      background: #f5f0e8;
+      color: #2c2c2c;
+      padding: 32px 16px 64px;
+    }
+
+    .page {
+      max-width: 680px;
+      margin: 0 auto;
+    }
+
+    /* ヘッダー */
+    .header {
+      text-align: center;
+      margin-bottom: 48px;
+    }
+    .header .eyebrow {
+      font-size: 12px;
+      letter-spacing: 0.15em;
+      color: #888;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+    .header h1 {
+      font-size: clamp(20px, 5vw, 28px);
+      font-weight: 800;
+      color: #1a1a1a;
+      line-height: 1.4;
+    }
+    .header h1 span {
+      color: #c0392b;
+    }
+    .header .sub {
+      margin-top: 10px;
+      font-size: 13px;
+      color: #666;
+    }
+
+    /* 役割バッジ */
+    .roles {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      margin-bottom: 48px;
+      flex-wrap: wrap;
+    }
+    .role-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      border-radius: 100px;
+      font-size: 13px;
+      font-weight: 700;
+    }
+    .role-badge.wife {
+      background: #fde8d8;
+      color: #c0392b;
+      border: 2px solid #c0392b;
+    }
+    .role-badge.husband {
+      background: #e8f0fe;
+      color: #2255cc;
+      border: 2px solid #2255cc;
+    }
+    .role-icon { font-size: 18px; }
+
+    /* ステップ */
+    .steps { display: flex; flex-direction: column; gap: 0; }
+
+    .step {
+      display: flex;
+      gap: 0;
+      position: relative;
+    }
+
+    /* 左：番号＋線 */
+    .step-left {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 56px;
+      flex-shrink: 0;
+    }
+    .step-num {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      font-weight: 900;
+      flex-shrink: 0;
+      position: relative;
+      z-index: 1;
+    }
+    .step-line {
+      width: 3px;
+      flex: 1;
+      min-height: 24px;
+      margin: 4px 0;
+    }
+    .step:last-child .step-line { display: none; }
+
+    /* 右：カード */
+    .step-card {
+      flex: 1;
+      margin-bottom: 20px;
+      margin-left: 12px;
+      border-radius: 16px;
+      padding: 20px 22px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    }
+
+    .step-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+    }
+    .step-timing {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      padding: 3px 10px;
+      border-radius: 100px;
+      white-space: nowrap;
+      margin-top: 2px;
+    }
+    .step-title {
+      font-size: 16px;
+      font-weight: 800;
+      line-height: 1.4;
+      flex: 1;
+    }
+
+    .step-body {
+      font-size: 13.5px;
+      line-height: 1.8;
+      color: #444;
+    }
+    .step-body ul {
+      padding-left: 18px;
+      margin-top: 6px;
+    }
+    .step-body li { margin-bottom: 2px; }
+
+    .who-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 100px;
+      margin-top: 10px;
+    }
+    .who-wife  { background: #fde8d8; color: #c0392b; }
+    .who-both  { background: #e8fdf0; color: #1a7a40; }
+    .who-husband { background: #e8f0fe; color: #2255cc; }
+
+    .tip {
+      margin-top: 10px;
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-size: 12.5px;
+      line-height: 1.7;
+      background: rgba(0,0,0,0.04);
+      color: #555;
+    }
+    .tip::before { content: "💡 "; }
+
+    /* カラーテーマ */
+    .s1 .step-num { background: #fff3cd; color: #856404; border: 2px solid #ffc107; }
+    .s1 .step-line { background: #ffc107; }
+    .s1 .step-card { background: #fff; border-left: 5px solid #ffc107; }
+    .s1 .step-timing { background: #fff3cd; color: #856404; }
+
+    .s2 .step-num { background: #fde8d8; color: #c0392b; border: 2px solid #e74c3c; }
+    .s2 .step-line { background: #e74c3c; }
+    .s2 .step-card { background: #fff; border-left: 5px solid #e74c3c; }
+    .s2 .step-timing { background: #fde8d8; color: #c0392b; }
+
+    .s3 .step-num { background: #e8f0fe; color: #2255cc; border: 2px solid #4285f4; }
+    .s3 .step-line { background: #4285f4; }
+    .s3 .step-card { background: #fff; border-left: 5px solid #4285f4; }
+    .s3 .step-timing { background: #e8f0fe; color: #2255cc; }
+
+    .s4 .step-num { background: #e8fdf0; color: #1a7a40; border: 2px solid #27ae60; }
+    .s4 .step-line { background: #27ae60; }
+    .s4 .step-card { background: #fff; border-left: 5px solid #27ae60; }
+    .s4 .step-timing { background: #e8fdf0; color: #1a7a40; }
+
+    .s5 .step-num { background: #f3e8fd; color: #7b2d8b; border: 2px solid #9b59b6; }
+    .s5 .step-line { background: #9b59b6; }
+    .s5 .step-card { background: #fff; border-left: 5px solid #9b59b6; }
+    .s5 .step-timing { background: #f3e8fd; color: #7b2d8b; }
+
+    .s6 .step-num { background: #fff0e8; color: #c0392b; border: 2px solid #e67e22; }
+    .s6 .step-line { background: #e67e22; }
+    .s6 .step-card { background: #fff; border-left: 5px solid #e67e22; }
+    .s6 .step-timing { background: #fff0e8; color: #c0392b; }
+
+    .s7 .step-num { background: #1a1a2e; color: #fff; border: 2px solid #1a1a2e; }
+    .s7 .step-card { background: #1a1a2e; border-left: 5px solid #f39c12; }
+    .s7 .step-title { color: #fff; }
+    .s7 .step-body { color: #ccc; }
+    .s7 .step-timing { background: #f39c12; color: #1a1a2e; }
+    .s7 .tip { background: rgba(255,255,255,0.08); color: #aaa; }
+
+    /* 収益イメージ */
+    .income-box {
+      background: #fff;
+      border-radius: 16px;
+      padding: 24px;
+      margin-top: 48px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    }
+    .income-box h2 {
+      font-size: 15px;
+      font-weight: 800;
+      margin-bottom: 16px;
+      color: #1a1a1a;
+    }
+    .income-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 0;
+      border-bottom: 1px dashed #eee;
+      font-size: 13px;
+    }
+    .income-row:last-child { border-bottom: none; }
+    .income-phase {
+      font-weight: 700;
+      color: #888;
+      white-space: nowrap;
+      width: 80px;
+      flex-shrink: 0;
+    }
+    .income-bar-wrap {
+      flex: 1;
+      background: #f0f0f0;
+      border-radius: 100px;
+      height: 22px;
+      overflow: hidden;
+    }
+    .income-bar {
+      height: 100%;
+      border-radius: 100px;
+      display: flex;
+      align-items: center;
+      padding-left: 10px;
+      font-size: 11px;
+      font-weight: 700;
+      color: #fff;
+      white-space: nowrap;
+    }
+    .bar-1 { width: 20%; background: #ffc107; }
+    .bar-2 { width: 45%; background: #27ae60; }
+    .bar-3 { width: 80%; background: #2255cc; }
+
+    /* フッター */
+    .footer {
+      text-align: center;
+      margin-top: 48px;
+      font-size: 12px;
+      color: #aaa;
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <!-- ヘッダー -->
+  <div class="header">
+    <div class="eyebrow">For 旦那さんへ</div>
+    <h1>メニュー開発の仕事<br><span>はじめ方ロードマップ</span></h1>
+    <div class="sub">知り合い不要・現場経験だけで始められる7ステップ</div>
+  </div>
+
+  <!-- 役割 -->
+  <div class="roles">
+    <div class="role-badge wife">
+      <span class="role-icon">👩</span> 奥さん：営業・文章・やりとり担当
+    </div>
+    <div class="role-badge husband">
+      <span class="role-icon">👨‍🍳</span> 旦那さん：料理・試作・レシピ担当
+    </div>
+  </div>
+
+  <!-- ステップ -->
+  <div class="steps">
+
+    <!-- STEP 1 -->
+    <div class="step s1">
+      <div class="step-left">
+        <div class="step-num">1</div>
+        <div class="step-line"></div>
+      </div>
+      <div class="step-card">
+        <div class="step-header">
+          <span class="step-timing">今日・30分</span>
+          <div class="step-title">得意なことをヒアリングする</div>
+        </div>
+        <div class="step-body">
+          奥さんが旦那さんに4つだけ聞いて、紙にメモ。
+          <ul>
+            <li>得意な料理ジャンルは？</li>
+            <li>お客さんに一番喜ばれた料理は？</li>
+            <li>どんな業態の店なら任せられる？</li>
+            <li>鹿児島食材で得意なものは？</li>
+          </ul>
+        </div>
+        <div class="tip">これが後のプロフィール文の材料になる</div>
+        <div><span class="who-badge who-wife">👩 奥さんが聞く</span></div>
+      </div>
+    </div>
+
+    <!-- STEP 2 -->
+    <div class="step s2">
+      <div class="step-left">
+        <div class="step-num">2</div>
+        <div class="step-line"></div>
+      </div>
+      <div class="step-card">
+        <div class="step-header">
+          <span class="step-timing">今週中</span>
+          <div class="step-title">お店の料理をスマホで撮影する</div>
+        </div>
+        <div class="step-body">
+          5〜10枚、明るい場所で撮るだけでOK。<br>
+          凝った写真でなくていい。「こんな料理が作れる人」が伝わればいい。
+        </div>
+        <div class="tip">写真があるだけで、実績ゼロでも信頼感が全然違う</div>
+        <div><span class="who-badge who-both">👨‍🍳 旦那さんが料理／👩 奥さんが撮影</span></div>
+      </div>
+    </div>
+
+    <!-- STEP 3 -->
+    <div class="step s3">
+      <div class="step-left">
+        <div class="step-num">3</div>
+        <div class="step-line"></div>
+      </div>
+      <div class="step-card">
+        <div class="step-header">
+          <span class="step-timing">来週</span>
+          <div class="step-title">ココナラに登録する（無料）</div>
+        </div>
+        <div class="step-body">
+          <strong>coconala.com</strong> にアカウントを作るだけ。<br>
+          プロフィールに書くこと：
+          <ul>
+            <li>「和食専門・現役料理人・経験20年」</li>
+            <li>STEP①で聞いた得意ジャンル</li>
+            <li>STEP②の写真を使う</li>
+          </ul>
+        </div>
+        <div class="tip">登録するだけでOK。まだ出品しなくていい</div>
+        <div><span class="who-badge who-wife">👩 奥さんが代わりに全部やってOK</span></div>
+      </div>
+    </div>
+
+    <!-- STEP 4 -->
+    <div class="step s4">
+      <div class="step-left">
+        <div class="step-num">4</div>
+        <div class="step-line"></div>
+      </div>
+      <div class="step-card">
+        <div class="step-header">
+          <span class="step-timing">1ヶ月後</span>
+          <div class="step-title">最初のサービスを出品する</div>
+        </div>
+        <div class="step-body">
+          こんなサービスを出品する（奥さんが文章を書く）：<br><br>
+          📋 <strong>メニュー相談（30分）：3,000円</strong><br>
+          📋 <strong>1品レシピ開発：15,000円〜</strong><br>
+          📋 <strong>5品メニューパック：50,000円〜</strong>
+        </div>
+        <div class="tip">最初は安めでOK。口コミ・実績を積むのが目的</div>
+        <div><span class="who-badge who-wife">👩 奥さんが文章を書く</span></div>
+      </div>
+    </div>
+
+    <!-- STEP 5 -->
+    <div class="step s5">
+      <div class="step-left">
+        <div class="step-num">5</div>
+        <div class="step-line"></div>
+      </div>
+      <div class="step-card">
+        <div class="step-header">
+          <span class="step-timing">案件が来たら</span>
+          <div class="step-title">初案件をこなして口コミをもらう</div>
+        </div>
+        <div class="step-body">
+          やりとりは奥さんが担当し、<br>
+          旦那さんは試作・レシピ作りに集中するだけ。<br><br>
+          納品後、必ず「レビューをお願いします」と伝える。
+        </div>
+        <div class="tip">口コミが1件つくだけで、次の依頼が来やすくなる</div>
+        <div>
+          <span class="who-badge who-wife">👩 やりとり・連絡</span>
+          <span class="who-badge who-husband">👨‍🍳 料理・試作</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 6 -->
+    <div class="step s6">
+      <div class="step-left">
+        <div class="step-num">6</div>
+        <div class="step-line"></div>
+      </div>
+      <div class="step-card">
+        <div class="step-header">
+          <span class="step-timing">口コミ2〜3件後</span>
+          <div class="step-title">ランサーズにも登録・案件に応募する</div>
+        </div>
+        <div class="step-body">
+          <strong>lancers.jp</strong> で企業からの案件に応募。<br>
+          ここから「攻め」の営業に切り替え。<br><br>
+          単価も少しずつ上げていく：<br>
+          1品：3〜5万円 / パック：15〜30万円
+        </div>
+        <div class="tip">実績があると「この人に頼みたい」と選ばれやすくなる</div>
+        <div><span class="who-badge who-wife">👩 奥さんが提案文を送る</span></div>
+      </div>
+    </div>
+
+    <!-- STEP 7 -->
+    <div class="step s7">
+      <div class="step-left">
+        <div class="step-num">🎯</div>
+      </div>
+      <div class="step-card">
+        <div class="step-header">
+          <span class="step-timing">半年〜1年後</span>
+          <div class="step-title">旅館・食品会社など高単価案件へ</div>
+        </div>
+        <div class="step-body">
+          鹿児島の観光旅館や食品メーカーへのメニュー監修。<br>
+          月額顧問契約（3〜5万円／月）なども狙える。
+        </div>
+        <div class="tip">ここまで来れば「副収入」から「もうひとつの柱」になる</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- 収益イメージ -->
+  <div class="income-box">
+    <h2>📈 収益イメージ</h2>
+    <div class="income-row">
+      <div class="income-phase">〜3ヶ月</div>
+      <div class="income-bar-wrap">
+        <div class="income-bar bar-1">月 3〜5万円</div>
+      </div>
+    </div>
+    <div class="income-row">
+      <div class="income-phase">〜6ヶ月</div>
+      <div class="income-bar-wrap">
+        <div class="income-bar bar-2">月 10〜20万円</div>
+      </div>
+    </div>
+    <div class="income-row">
+      <div class="income-phase">1年後〜</div>
+      <div class="income-bar-wrap">
+        <div class="income-bar bar-3">月 30〜50万円も視野</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    知り合い不要・登録費無料・旦那さんは料理だけに集中でOK
+  </div>
+
+</div>
+</body>
+</html>
