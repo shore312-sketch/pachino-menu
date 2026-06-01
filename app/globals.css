@@ -492,6 +492,53 @@ body {
   padding: 1.2rem 0 0.5rem;
 }
 
+/* ---- チラシページ 印刷・PDF用 ---- */
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 0;
+  }
+
+  body {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .flyer-wrap {
+    padding: 0;
+    background: #faf7f2 !important;
+  }
+
+  .flyer-inner {
+    max-width: 100%;
+  }
+
+  .flyer-hero {
+    background: linear-gradient(160deg, #1d3d1d 0%, #2e5c2e 100%) !important;
+    padding: 2rem 2rem 1.8rem;
+  }
+
+  .flyer-points {
+    break-inside: avoid;
+  }
+
+  .flyer-section {
+    break-inside: avoid;
+    margin-top: 0.4rem;
+  }
+
+  .flyer-cta {
+    break-inside: avoid;
+    margin-top: 0.4rem;
+    background: #1d3d1d !important;
+  }
+
+  .flyer-tel-btn {
+    border: 2px solid rgba(255,255,255,0.45) !important;
+    color: #fff !important;
+  }
+}
+
 /* ---- 法人向けお弁当ページ ---- */
 .bento-wrap {
   min-height: 100vh;
