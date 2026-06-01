@@ -492,6 +492,49 @@ body {
   padding: 1.2rem 0 0.5rem;
 }
 
+/* QRコードセクション */
+.flyer-qr-section {
+  background: #fff;
+  padding: 1.4rem 1.4rem 1.2rem;
+  margin-top: 0.6rem;
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+}
+
+.flyer-qr-canvas {
+  flex-shrink: 0;
+  border: 1px solid #ece8e0;
+  border-radius: 8px;
+}
+
+.flyer-qr-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.flyer-qr-label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  color: #2e5c2e;
+}
+
+.flyer-qr-url {
+  font-size: 0.72rem;
+  color: #1a1a1a;
+  word-break: break-all;
+  line-height: 1.5;
+  font-weight: 600;
+}
+
+.flyer-qr-hint {
+  font-size: 0.68rem;
+  color: #aaa;
+  line-height: 1.5;
+}
+
 /* ---- チラシページ 印刷・PDF用 ---- */
 @media print {
   @page {
@@ -536,6 +579,11 @@ body {
   .flyer-tel-btn {
     border: 2px solid rgba(255,255,255,0.45) !important;
     color: #fff !important;
+  }
+
+  .flyer-qr-section {
+    break-inside: avoid;
+    margin-top: 0.4rem;
   }
 }
 

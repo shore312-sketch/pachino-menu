@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import QRCode from "qrcode";
 
 type MenuItem = {
   set_label: string;
@@ -11,12 +12,26 @@ type MenuItem = {
 
 export default function FlyerPage() {
   const [menu, setMenu] = useState<MenuItem[]>([]);
+  const [pageUrl, setPageUrl] = useState("");
+  const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
     fetch("/api/menu", { cache: "no-store" })
       .then((r) => (r.ok ? r.json() : []))
       .then(setMenu)
       .catch(() => {});
+  }, []);
+
+  useEffect(() => {
+    const url = window.location.href;
+    setPageUrl(url);
+    if (canvasRef.current) {
+      QRCode.toCanvas(canvasRef.current, url, {
+        width: 140,
+        margin: 1,
+        color: { dark: "#1d3d1d", light: "#ffffff" },
+      });
+    }
   }, []);
 
   return (
@@ -89,6 +104,16 @@ export default function FlyerPage() {
             受付時間：営業時間内<br />
             ご注文・日程のご相談はお気軽に
           </p>
+        </section>
+
+        {/* QRコード＋URL */}
+        <section className="flyer-qr-section">
+          <canvas ref={canvasRef} className="flyer-qr-canvas" />
+          <div className="flyer-qr-info">
+            <p className="flyer-qr-label">このページのURL</p>
+            <p className="flyer-qr-url">{pageUrl}</p>
+            <p className="flyer-qr-hint">QRコードを読み取るか、URLを入力するとご覧いただけます</p>
+          </div>
         </section>
 
         <footer className="flyer-footer">
