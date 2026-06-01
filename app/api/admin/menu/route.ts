@@ -1,7 +1,5 @@
-import { getRequestContext } from "@cloudflare/next-on-pages";
+import { getCloudflareContext } from "@opennextjs/cloudflare";
 import { NextRequest, NextResponse } from "next/server";
-
-export const runtime = "edge";
 
 type MenuItem = {
   set_label: string;
@@ -11,7 +9,7 @@ type MenuItem = {
 };
 
 export async function POST(request: NextRequest) {
-  const { env } = getRequestContext();
+  const { env } = await getCloudflareContext({ async: true });
   const body: MenuItem[] = await request.json();
 
   // 全件入れ替え（削除されたセットも消える）
