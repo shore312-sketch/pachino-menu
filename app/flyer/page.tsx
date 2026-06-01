@@ -92,7 +92,8 @@ export default function FlyerPage() {
         </section>
 
         <footer className="flyer-footer">
-          <p>ぱちーの｜鹿児島市</p>
+          <p>ぱちーの</p>
+          <p>鹿児島市玉里山地3丁目12−7</p>
         </footer>
 
       </div>
