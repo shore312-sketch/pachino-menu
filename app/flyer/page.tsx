@@ -1,0 +1,398 @@
+"use client";
+
+export default function FlyerPage() {
+  return (
+    <>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;600&display=swap');
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+          background: #e8e4df;
+          font-family: 'Noto Serif JP', 'Hiragino Mincho ProN', serif;
+        }
+
+        .flyer-page {
+          width: 210mm;
+          min-height: 297mm;
+          margin: 20px auto;
+          background: #faf8f5;
+          position: relative;
+          overflow: hidden;
+          display: flex;
+          flex-direction: column;
+        }
+
+        /* 上部 装飾帯 */
+        .flyer-top-band {
+          background: #1d3d1d;
+          height: 8px;
+        }
+
+        /* ヘッダー */
+        .flyer-header {
+          background: #1d3d1d;
+          color: #f5f0e8;
+          padding: 36px 40px 30px;
+          position: relative;
+        }
+
+        .flyer-header::after {
+          content: '';
+          position: absolute;
+          bottom: -18px;
+          left: 0;
+          right: 0;
+          height: 36px;
+          background: #1d3d1d;
+          clip-path: ellipse(55% 100% at 50% 0%);
+        }
+
+        .flyer-eyebrow {
+          font-size: 11px;
+          letter-spacing: 0.35em;
+          color: rgba(255, 220, 140, 0.85);
+          margin-bottom: 10px;
+          font-weight: 300;
+        }
+
+        .flyer-restaurant-name {
+          font-size: 46px;
+          font-weight: 300;
+          letter-spacing: 0.12em;
+          line-height: 1;
+          margin-bottom: 6px;
+        }
+
+        .flyer-restaurant-name span {
+          font-size: 22px;
+          font-weight: 300;
+          letter-spacing: 0.25em;
+          opacity: 0.7;
+          display: block;
+          margin-top: 4px;
+        }
+
+        .flyer-tagline {
+          font-size: 13px;
+          letter-spacing: 0.2em;
+          color: rgba(245, 240, 228, 0.75);
+          font-weight: 300;
+          margin-top: 14px;
+        }
+
+        /* メインコンテンツ */
+        .flyer-body {
+          padding: 52px 44px 36px;
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          gap: 28px;
+        }
+
+        /* セクション見出し */
+        .flyer-section-title {
+          font-size: 13px;
+          letter-spacing: 0.3em;
+          color: #1d3d1d;
+          font-weight: 600;
+          border-left: 3px solid #1d3d1d;
+          padding-left: 10px;
+          margin-bottom: 14px;
+        }
+
+        /* リード文 */
+        .flyer-lead {
+          font-size: 15px;
+          line-height: 2;
+          color: #3a3530;
+          font-weight: 300;
+          border: 1px solid rgba(29, 61, 29, 0.15);
+          border-radius: 4px;
+          padding: 20px 24px;
+          background: rgba(29, 61, 29, 0.03);
+        }
+
+        /* 特徴グリッド */
+        .flyer-features {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 14px;
+        }
+
+        .flyer-feature-card {
+          border: 1px solid rgba(29, 61, 29, 0.18);
+          border-radius: 6px;
+          padding: 18px 20px;
+          background: #fff;
+        }
+
+        .flyer-feature-icon {
+          font-size: 22px;
+          margin-bottom: 8px;
+        }
+
+        .flyer-feature-title {
+          font-size: 13px;
+          font-weight: 600;
+          color: #1d3d1d;
+          letter-spacing: 0.1em;
+          margin-bottom: 5px;
+        }
+
+        .flyer-feature-desc {
+          font-size: 11.5px;
+          color: #6b6560;
+          line-height: 1.8;
+          font-weight: 300;
+        }
+
+        /* 料金表 */
+        .flyer-pricing {
+          border: 1px solid rgba(29, 61, 29, 0.2);
+          border-radius: 6px;
+          overflow: hidden;
+          background: #fff;
+        }
+
+        .flyer-pricing-header {
+          background: #2e5c2e;
+          color: #f5f0e8;
+          padding: 10px 20px;
+          font-size: 12px;
+          letter-spacing: 0.2em;
+          font-weight: 400;
+        }
+
+        .flyer-pricing-row {
+          display: flex;
+          align-items: baseline;
+          justify-content: space-between;
+          padding: 13px 20px;
+          border-bottom: 1px solid rgba(29, 61, 29, 0.08);
+          gap: 12px;
+        }
+
+        .flyer-pricing-row:last-child {
+          border-bottom: none;
+        }
+
+        .flyer-pricing-name {
+          font-size: 13px;
+          color: #3a3530;
+          font-weight: 400;
+          flex: 1;
+        }
+
+        .flyer-pricing-detail {
+          font-size: 11px;
+          color: #9a958f;
+          font-weight: 300;
+          flex: 2;
+          line-height: 1.6;
+        }
+
+        .flyer-pricing-price {
+          font-size: 15px;
+          color: #1d3d1d;
+          font-weight: 600;
+          letter-spacing: 0.05em;
+          white-space: nowrap;
+        }
+
+        .flyer-pricing-note {
+          padding: 10px 20px;
+          font-size: 10.5px;
+          color: #9a958f;
+          background: rgba(29, 61, 29, 0.03);
+          font-weight: 300;
+          line-height: 1.7;
+        }
+
+        /* フッター */
+        .flyer-footer {
+          background: #1d3d1d;
+          color: #f5f0e8;
+          padding: 22px 44px;
+          display: grid;
+          grid-template-columns: 1fr auto;
+          align-items: center;
+          gap: 24px;
+          margin-top: auto;
+        }
+
+        .flyer-contact-label {
+          font-size: 10px;
+          letter-spacing: 0.3em;
+          color: rgba(255, 220, 140, 0.8);
+          margin-bottom: 10px;
+          font-weight: 300;
+        }
+
+        .flyer-contact-info {
+          font-size: 13px;
+          color: rgba(245, 240, 228, 0.88);
+          line-height: 2;
+          font-weight: 300;
+        }
+
+        .flyer-contact-phone {
+          font-size: 22px;
+          font-weight: 300;
+          letter-spacing: 0.1em;
+          color: #f5f0e8;
+          margin-bottom: 4px;
+        }
+
+        .flyer-stamp {
+          width: 72px;
+          height: 72px;
+          border: 2px solid rgba(255, 220, 140, 0.5);
+          border-radius: 50%;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          text-align: center;
+          flex-shrink: 0;
+        }
+
+        .flyer-stamp-text {
+          font-size: 9px;
+          letter-spacing: 0.15em;
+          color: rgba(255, 220, 140, 0.8);
+          line-height: 1.6;
+          font-weight: 300;
+        }
+
+        /* 印刷用 */
+        @media print {
+          body { background: none; }
+          .flyer-page { margin: 0; width: 100%; min-height: 100vh; }
+          .no-print { display: none; }
+        }
+
+        /* 画面表示用の印刷ボタン */
+        .print-btn {
+          position: fixed;
+          bottom: 24px;
+          right: 24px;
+          background: #1d3d1d;
+          color: #f5f0e8;
+          border: none;
+          border-radius: 8px;
+          padding: 12px 24px;
+          font-size: 14px;
+          font-family: inherit;
+          letter-spacing: 0.1em;
+          cursor: pointer;
+          box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+          transition: background 0.15s;
+        }
+
+        .print-btn:hover { background: #2e5c2e; }
+
+        @media (max-width: 240mm) {
+          .flyer-page { width: 100%; margin: 0; }
+        }
+      `}</style>
+
+      <button className="print-btn no-print" onClick={() => window.print()}>
+        印刷する
+      </button>
+
+      <div className="flyer-page">
+        <div className="flyer-top-band" />
+
+        <div className="flyer-header">
+          <p className="flyer-eyebrow">CORPORATE CATERING &amp; LUNCH BOX SERVICE</p>
+          <h1 className="flyer-restaurant-name">
+            ぱちーの
+            <span>Pachino</span>
+          </h1>
+          <p className="flyer-tagline">鹿児島発、企業様へお届けするこだわりのランチ</p>
+        </div>
+
+        <div className="flyer-body">
+
+          <div>
+            <p className="flyer-section-title">ご挨拶</p>
+            <div className="flyer-lead">
+              日々お忙しい企業様のランチタイムに、心のこもった手作りのお弁当をお届けします。
+              地元・鹿児島の食材を活かした献立で、社員の皆さまの活力を支えます。
+              少量から対応可能。会議・研修・日常のランチとしてお気軽にご相談ください。
+            </div>
+          </div>
+
+          <div>
+            <p className="flyer-section-title">サービスの特長</p>
+            <div className="flyer-features">
+              <div className="flyer-feature-card">
+                <div className="flyer-feature-icon">🍱</div>
+                <p className="flyer-feature-title">手作り日替わり弁当</p>
+                <p className="flyer-feature-desc">毎日仕込みから丁寧に。栄養バランスを考えた日替わりメニューをご提供します。</p>
+              </div>
+              <div className="flyer-feature-card">
+                <div className="flyer-feature-icon">🚚</div>
+                <p className="flyer-feature-title">ご指定先への配達</p>
+                <p className="flyer-feature-desc">鹿児島市内のオフィス・工場・施設へご指定の時間にお届けします。</p>
+              </div>
+              <div className="flyer-feature-card">
+                <div className="flyer-feature-icon">📋</div>
+                <p className="flyer-feature-title">少量・単発から対応</p>
+                <p className="flyer-feature-desc">5食〜ご注文可能。会議のときだけのスポット発注もお気軽にどうぞ。</p>
+              </div>
+              <div className="flyer-feature-card">
+                <div className="flyer-feature-icon">🌿</div>
+                <p className="flyer-feature-title">アレルギー配慮</p>
+                <p className="flyer-feature-desc">食物アレルギーのある方へも個別対応いたします。事前にお申し付けください。</p>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <p className="flyer-section-title">料金案内</p>
+            <div className="flyer-pricing">
+              <div className="flyer-pricing-header">お弁当プラン（税込）</div>
+              <div className="flyer-pricing-row">
+                <span className="flyer-pricing-name">日替わり弁当</span>
+                <span className="flyer-pricing-detail">主菜・副菜2品・ご飯・漬物</span>
+                <span className="flyer-pricing-price">¥900〜</span>
+              </div>
+              <div className="flyer-pricing-row">
+                <span className="flyer-pricing-name">特製弁当</span>
+                <span className="flyer-pricing-detail">主菜2品・副菜3品・ご飯・汁物</span>
+                <span className="flyer-pricing-price">¥1,200〜</span>
+              </div>
+              <div className="flyer-pricing-row">
+                <span className="flyer-pricing-name">会議・研修プラン</span>
+                <span className="flyer-pricing-detail">10食以上のまとめご注文　ご相談ください</span>
+                <span className="flyer-pricing-price">応相談</span>
+              </div>
+              <div className="flyer-pricing-note">
+                ※ 配達エリア・最低注文数・締め切り時間はお電話にてご確認ください。<br />
+                ※ 前日17時までにご注文いただいた分を翌日お届けします。
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <div className="flyer-footer">
+          <div>
+            <p className="flyer-contact-label">CONTACT</p>
+            <p className="flyer-contact-phone">099-813-7774</p>
+            <p className="flyer-contact-info">
+              鹿児島市玉里山地3丁目12−7<br />
+              Instagram　@paciiino1028
+            </p>
+          </div>
+          <div className="flyer-stamp">
+            <p className="flyer-stamp-text">鹿児島市<br />玉里山地<br />ぱちーの</p>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+}
