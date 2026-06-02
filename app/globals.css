@@ -764,3 +764,178 @@ body {
   letter-spacing: 0.15em;
   padding-top: 0.5rem;
 }
+
+/* ---- 名刺・葉書カードページ ---- */
+.card-page {
+  min-height: 100vh;
+  background: #f0ede8;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem;
+  gap: 1.2rem;
+}
+
+.card-wrap {
+  width: 148mm;
+  min-height: 100mm;
+  background: #fff;
+  border: 2px dashed #ccc;
+  border-radius: 6px;
+  padding: 6mm 8mm;
+  display: flex;
+  flex-direction: column;
+  gap: 3mm;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+}
+
+.card-header {
+  text-align: center;
+  border-bottom: 1.5px solid #1d3d1d;
+  padding-bottom: 3mm;
+}
+
+.card-tagline {
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  color: #888;
+  margin-bottom: 1mm;
+}
+
+.card-title {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: #1a1a1a;
+  line-height: 1.45;
+  letter-spacing: 0.04em;
+}
+
+.card-shop {
+  font-size: 0.7rem;
+  letter-spacing: 0.28em;
+  color: #2e5c2e;
+  margin-top: 1mm;
+}
+
+.card-points {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4em;
+  font-size: 0.65rem;
+  color: #555;
+  letter-spacing: 0.06em;
+  flex-wrap: wrap;
+}
+
+.card-dot {
+  color: #2e5c2e;
+  font-weight: 700;
+}
+
+.card-qr-row {
+  display: flex;
+  justify-content: center;
+  gap: 6mm;
+  flex: 1;
+  align-items: flex-start;
+  padding: 2mm 0;
+}
+
+.card-qr-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5mm;
+}
+
+.card-qr-canvas {
+  border: 1px solid #ece8e0;
+  border-radius: 4px;
+}
+
+.card-qr-label {
+  font-size: 0.6rem;
+  font-weight: 600;
+  color: #2e5c2e;
+  letter-spacing: 0.1em;
+}
+
+.card-qr-url {
+  font-size: 0.52rem;
+  color: #888;
+  word-break: break-all;
+  text-align: center;
+  max-width: 160px;
+  line-height: 1.4;
+}
+
+.card-footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 0.6rem;
+  color: #444;
+  border-top: 1px solid #ece8e0;
+  padding-top: 2.5mm;
+  letter-spacing: 0.04em;
+  flex-wrap: wrap;
+  gap: 0.3em;
+}
+
+.card-footer-sep {
+  color: #ccc;
+}
+
+.card-print-hint {
+  font-size: 0.75rem;
+  color: #999;
+  text-align: center;
+}
+
+.card-print-btn {
+  padding: 0.75rem 2.5rem;
+  background: #2e5c2e;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-family: var(--font-klee);
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+}
+
+.card-print-btn:hover {
+  background: #1d3d1d;
+}
+
+/* 印刷時 */
+@media print {
+  .card-page {
+    background: none;
+    padding: 0;
+    justify-content: flex-start;
+    align-items: flex-start;
+    min-height: unset;
+    gap: 0;
+  }
+
+  .card-print-hint,
+  .card-print-btn {
+    display: none;
+  }
+
+  .card-wrap {
+    border: 1px dashed #bbb;
+    box-shadow: none;
+    width: 148mm;
+    min-height: 100mm;
+  }
+
+  @page {
+    size: A4 portrait;
+    margin: 10mm;
+  }
+}
