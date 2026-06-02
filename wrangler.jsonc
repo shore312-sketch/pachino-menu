@@ -12,7 +12,8 @@
     {
       "binding": "DB",
       "database_name": "pachino-menu",
-      "database_id": "YOUR_DATABASE_ID_HERE"
+      "database_id": "0fb53f97-67da-4623-a76f-d52af040a0fa",
+      "migrations_dir": "migrations"
     }
   ]
 }

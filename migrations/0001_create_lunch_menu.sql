@@ -1,0 +1,8 @@
+CREATE TABLE IF NOT EXISTS lunch_menu (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  set_label TEXT NOT NULL,
+  dishes TEXT NOT NULL,
+  price TEXT NOT NULL,
+  note TEXT DEFAULT '',
+  display_order INTEGER NOT NULL
+);
