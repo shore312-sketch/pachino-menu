@@ -87,14 +87,6 @@ body {
   margin-top: 1cqw;
 }
 
-.w-logo {
-  position: absolute;
-  top: 5cqw;
-  right: 5.4cqw;
-  width: 13cqw;
-  height: 13cqw;
-}
-
 .w-body {
   flex: 1;
   min-height: 0;

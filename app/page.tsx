@@ -81,9 +81,6 @@ export default function MenuDisplay() {
             {menu.length === 0 && <p className="w-empty">準備中です</p>}
           </div>
         </div>
-
-        {/* eslint-disable-next-line @next/next/no-img-element -- 静的なロゴSVGなので最適化不要 */}
-        <img className="w-logo" src="/logo.svg" alt="ぱちーの ロゴ" />
       </div>
     </div>
   );
