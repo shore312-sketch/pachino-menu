@@ -82,9 +82,8 @@ export default function MenuDisplay() {
           </div>
         </div>
 
-        <div className="w-logo" aria-hidden="true">
-          ぱ
-        </div>
+        {/* eslint-disable-next-line @next/next/no-img-element -- 静的なロゴSVGなので最適化不要 */}
+        <img className="w-logo" src="/logo.svg" alt="ぱちーの ロゴ" />
       </div>
     </div>
   );
