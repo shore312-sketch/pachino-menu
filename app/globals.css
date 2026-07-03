@@ -6,6 +6,13 @@
 
 :root {
   --font-klee: var(--font-klee-var, 'Klee One'), 'Hiragino Kaku Gothic ProN', 'Yu Gothic', sans-serif;
+  --font-mincho: var(--font-mincho-var, 'Shippori Mincho'), 'Hiragino Mincho ProN', 'Yu Mincho', 'YuMincho', serif;
+  --w-paper: #fbf8f1;
+  --w-ink: #241f1a;
+  --w-sub: #6b6156;
+  --w-rule: #d8cdb6;
+  --w-rule-soft: #ded3bd;
+  --w-red: #a63a32;
 }
 
 body {
@@ -13,105 +20,217 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* ---- お客さん向け黒板画面 ---- */
-.board-wrap {
+/* ---- お客さん向け御品書き画面 ----
+   シート内の寸法はすべてcqw（シート幅基準）。
+   コンテナ（.sheet）自身にはcqwを使わないこと。 */
+.paper-wrap {
   display: flex;
   align-items: center;
   justify-content: center;
   width: 100vw;
-  height: 100vh;
-  background: radial-gradient(ellipse at center, #2a1a00 0%, #0d0800 100%);
-  overflow: hidden;
+  min-height: 100vh;
+  background: linear-gradient(160deg, #ece5d6 0%, #e2d9c6 100%);
+  padding: 2vmin;
 }
 
-.board {
+.sheet {
+  /* A4縦の比率を保ったまま画面に収める */
+  width: min(96vw, calc(96vh * 210 / 297));
+  aspect-ratio: 210 / 297;
+  container-type: inline-size;
   position: relative;
-  width: min(92vw, 92vh);
-  height: min(92vw, 92vh);
+  overflow: hidden;
+  background: var(--w-paper);
+  color: var(--w-ink);
+  font-family: var(--font-mincho);
+  border-radius: 4px;
+  box-shadow: 0 2px 6px rgba(30, 24, 14, 0.15), 0 12px 30px rgba(30, 24, 14, 0.2);
+}
+
+.washi-frame {
+  position: absolute;
+  inset: 4cqw;
+  border: 1px solid #c9bca4;
+  padding: 4cqw 3.5cqw;
+  display: flex;
+  flex-direction: column;
+}
+
+.w-head {
+  text-align: center;
+  padding-bottom: 2.2cqw;
+  border-bottom: 1px solid var(--w-rule);
+}
+
+.w-eyebrow {
+  font-size: 2.6cqw;
+  line-height: 1.4;
+  letter-spacing: 0.5em;
+  text-indent: 0.5em;
+  color: var(--w-sub);
+  margin-bottom: 1.2cqw;
+}
+
+.w-title {
+  font-size: 6cqw;
+  line-height: 1.35;
+  font-weight: 700;
+  letter-spacing: 0.26em;
+  text-indent: 0.26em;
+}
+
+.w-date {
+  font-size: 2.9cqw;
+  line-height: 1.4;
+  letter-spacing: 0.2em;
+  color: var(--w-sub);
+  margin-top: 1cqw;
+}
+
+.w-logo {
+  position: absolute;
+  top: 5.2cqw;
+  right: 5.6cqw;
+  width: 11.5cqw;
+  height: 11.5cqw;
+  border: 1.3cqw solid var(--w-ink);
   border-radius: 50%;
-  background: radial-gradient(circle at 38% 32%, #2e5c2e 0%, #1d3d1d 55%, #0f230f 100%);
-  box-shadow:
-    0 0 0 14px #5c3300,
-    0 0 0 22px #3d2200,
-    0 10px 60px rgba(0, 0, 0, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 6.2cqw;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--w-ink);
+  padding-bottom: 0.6cqw;
+}
+
+.w-body {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: row-reverse; /* A定食が右、和文の読み順どおり右→左 */
+  justify-content: space-evenly;
+  align-items: stretch;
+  padding-top: 2.4cqw;
+}
+
+.v-rule {
+  width: 1px;
+  background: var(--w-rule-soft);
+  margin: 2cqw 0;
+}
+
+.v-set {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  padding: 10% 8%;
+  gap: 2cqw;
+  min-width: 0;
 }
 
-.board-header {
-  font-size: clamp(1rem, 3.2vmin, 1.6rem);
-  font-weight: 600;
-  color: rgba(245, 240, 228, 0.92);
-  letter-spacing: 0.2em;
-  margin-bottom: clamp(0.5rem, 1.8vmin, 1rem);
-  text-align: center;
-}
-
-.divider {
-  width: 80%;
-  border: none;
-  border-top: 1px solid rgba(245, 240, 228, 0.3);
-  margin-bottom: clamp(0.5rem, 1.8vmin, 1rem);
-}
-
-.menu-sections {
-  width: 100%;
+.v-sethead {
   display: flex;
   flex-direction: column;
-  gap: clamp(0.5rem, 1.6vmin, 1rem);
+  align-items: center;
+  gap: 1.4cqw;
 }
 
-.menu-section {
-  width: 100%;
+.v-label {
+  font-size: 4.3cqw;
+  line-height: 1.4;
+  font-weight: 700;
+  letter-spacing: 0.28em;
+  text-indent: 0.28em;
 }
 
-.set-header {
-  display: flex;
-  align-items: baseline;
-  gap: 0.5em;
-  margin-bottom: 0.2em;
+.v-badge {
+  font-size: 2.4cqw;
+  line-height: 1.5;
+  color: var(--w-red);
+  border: 1px solid rgba(166, 58, 50, 0.55);
+  border-radius: 2px;
+  padding: 0.18em 0.7em;
+  letter-spacing: 0.14em;
 }
 
-.set-label {
-  font-size: clamp(1rem, 3vmin, 1.5rem);
-  font-weight: 600;
-  color: rgba(245, 240, 228, 0.96);
+.v-dishes {
+  height: 56cqw;
+  flex-shrink: 0;
+  writing-mode: vertical-rl;
+  font-size: 3.2cqw;
+  letter-spacing: 0.08em;
+  line-height: 1.6;
 }
 
-.set-badge {
-  font-size: clamp(0.6rem, 1.7vmin, 0.82rem);
-  color: rgba(255, 220, 140, 0.92);
-  border: 1px solid rgba(255, 220, 140, 0.45);
-  border-radius: 3px;
-  padding: 0.05em 0.45em;
+.v-price {
+  margin-top: auto;
+  font-size: 3.6cqw;
+  line-height: 1.3;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  border-top: 1px solid var(--w-rule);
+  padding: 1.4cqw 2cqw 0;
 }
 
-.set-dishes {
-  font-size: clamp(0.72rem, 2.1vmin, 1.05rem);
-  color: rgba(235, 228, 210, 0.85);
-  line-height: 1.7;
-  padding-left: 0.6em;
-  white-space: pre-line;
+.w-empty {
+  align-self: center;
+  margin: auto;
+  font-size: 3.4cqw;
+  letter-spacing: 0.3em;
+  color: var(--w-sub);
 }
 
-.set-price-row {
-  text-align: right;
-  margin-top: 0.15em;
+.print-btn {
+  position: fixed;
+  top: 12px;
+  right: 12px;
+  z-index: 10;
+  font-family: var(--font-mincho);
+  font-size: 0.85rem;
+  letter-spacing: 0.15em;
+  color: var(--w-sub);
+  background: rgba(251, 248, 241, 0.85);
+  border: 1px solid #c9bca4;
+  border-radius: 6px;
+  padding: 0.45em 1em;
+  cursor: pointer;
+  opacity: 0.35;
+  transition: opacity 0.2s;
 }
 
-.set-price {
-  font-size: clamp(0.82rem, 2.4vmin, 1.2rem);
-  color: rgba(245, 240, 228, 0.9);
-  letter-spacing: 0.06em;
+.print-btn:hover,
+.print-btn:focus-visible {
+  opacity: 1;
 }
 
-.section-divider {
-  border: none;
-  border-top: 1px solid rgba(245, 240, 228, 0.18);
-  margin: clamp(0.3rem, 1vmin, 0.6rem) 0;
+/* ---- A4印刷 ---- */
+@page {
+  size: A4 portrait;
+  margin: 0;
+}
+
+@media print {
+  .print-btn {
+    display: none;
+  }
+
+  .paper-wrap {
+    display: block;
+    background: none;
+    padding: 0;
+    width: auto;
+    min-height: 0;
+  }
+
+  .sheet {
+    width: 210mm;
+    height: 296mm;
+    border-radius: 0;
+    box-shadow: none;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
 }
 
 /* ---- 管理画面 ---- */

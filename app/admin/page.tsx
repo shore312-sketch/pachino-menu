@@ -26,8 +26,12 @@ export default function AdminPage() {
     const draft = localStorage.getItem(DRAFT_KEY);
     if (draft) {
       try {
-        setMenu(JSON.parse(draft));
-        loaded.current = true;
+        const parsed = JSON.parse(draft);
+        // localStorageはSSRで読めないため、復元はマウント後の非同期タイミングで行う
+        Promise.resolve().then(() => {
+          setMenu(parsed);
+          loaded.current = true;
+        });
         return;
       } catch {
         localStorage.removeItem(DRAFT_KEY);

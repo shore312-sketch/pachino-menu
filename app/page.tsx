@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 
 type MenuItem = {
   set_label: string;
@@ -9,8 +9,16 @@ type MenuItem = {
   note: string;
 };
 
+const WEEKDAYS = ["日", "月", "火", "水", "木", "金", "土"];
+
+function todayLabel() {
+  const now = new Date();
+  return `${now.getMonth() + 1}月${now.getDate()}日（${WEEKDAYS[now.getDay()]}曜日）`;
+}
+
 export default function MenuDisplay() {
   const [menu, setMenu] = useState<MenuItem[]>([]);
+  const [date, setDate] = useState("");
 
   async function fetchMenu() {
     try {
@@ -19,45 +27,63 @@ export default function MenuDisplay() {
     } catch {
       // ネットワークエラー時はそのまま表示維持
     }
+    // 日付はサーバーとタイムゾーンがずれるため、クライアント側で取得後に反映する
+    setDate(todayLabel());
   }
 
   useEffect(() => {
-    fetchMenu();
-    // 1分ごとに最新メニューを取得
+    Promise.resolve().then(fetchMenu);
+    // 1分ごとに最新メニューを取得（日付もあわせて更新）
     const id = setInterval(fetchMenu, 60_000);
     return () => clearInterval(id);
   }, []);
 
   return (
-    <div className="board-wrap">
-      <div className="board">
-        <p className="board-header">本日のランチ</p>
-        <hr className="divider" />
+    <div className="paper-wrap">
+      <button
+        className="print-btn"
+        onClick={() => window.print()}
+        aria-label="この御品書きをA4で印刷"
+      >
+        印刷
+      </button>
 
-        <div className="menu-sections">
-          {menu.map((item, i) => (
-            <div key={item.set_label}>
-              {i > 0 && <hr className="section-divider" />}
-              <div className="menu-section">
-                <div className="set-header">
-                  <span className="set-label">{item.set_label}定食</span>
-                  {item.note && (
-                    <span className="set-badge">{item.note}</span>
-                  )}
-                </div>
-                <p className="set-dishes">{item.dishes}</p>
-                <div className="set-price-row">
-                  <span className="set-price">¥{item.price}</span>
-                </div>
-              </div>
-            </div>
-          ))}
+      <div className="sheet">
+        <div className="washi-frame">
+          <header className="w-head">
+            <p className="w-eyebrow">和食 ぱちーの</p>
+            <h1 className="w-title">本日の御品書き</h1>
+            <p className="w-date">{date}</p>
+          </header>
 
-          {menu.length === 0 && (
-            <p style={{ color: "rgba(245,240,228,0.5)", textAlign: "center", fontSize: "clamp(0.8rem,2vmin,1rem)" }}>
-              準備中です
-            </p>
-          )}
+          <div className="w-body">
+            {menu.map((item, i) => (
+              <Fragment key={item.set_label}>
+                {i > 0 && <div className="v-rule" aria-hidden="true" />}
+                <div className="v-set">
+                  <div className="v-sethead">
+                    <p className="v-label">{item.set_label}定食</p>
+                    {item.note && <p className="v-badge">{item.note}</p>}
+                  </div>
+                  <div className="v-dishes">
+                    {item.dishes
+                      .split(/\r?\n/)
+                      .filter((line) => line.trim() !== "")
+                      .map((dish, j) => (
+                        <p key={j}>{dish}</p>
+                      ))}
+                  </div>
+                  <p className="v-price">{item.price}円</p>
+                </div>
+              </Fragment>
+            ))}
+
+            {menu.length === 0 && <p className="w-empty">準備中です</p>}
+          </div>
+        </div>
+
+        <div className="w-logo" aria-hidden="true">
+          ぱ
         </div>
       </div>
     </div>
