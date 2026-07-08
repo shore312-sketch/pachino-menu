@@ -1,6 +1,7 @@
 "use client";
 
 import { Fragment, useEffect, useState } from "react";
+import { ENSO_PATH } from "./enso-path";
 
 type MenuItem = {
   set_label: string;
@@ -79,6 +80,22 @@ export default function MenuDisplay() {
             ))}
 
             {menu.length === 0 && <p className="w-empty">準備中です</p>}
+          </div>
+
+          <div className="w-hours" aria-label="ランチ営業時間 11時30分から14時 ラストオーダー13時10分">
+            <svg
+              className="w-enso"
+              viewBox="0 0 120 120"
+              aria-hidden="true"
+              focusable="false"
+            >
+              <path d={ENSO_PATH} fill="#c9302c" />
+            </svg>
+            <div className="w-hours-text">
+              <span className="w-hours-title">ランチ</span>
+              <span className="w-hours-time">11:30〜14:00</span>
+              <span className="w-hours-lo">(L.o13:10)</span>
+            </div>
           </div>
         </div>
       </div>

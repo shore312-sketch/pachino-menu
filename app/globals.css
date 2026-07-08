@@ -7,6 +7,7 @@
 :root {
   --font-klee: var(--font-klee-var, 'Klee One'), 'Hiragino Kaku Gothic ProN', 'Yu Gothic', sans-serif;
   --font-mincho: var(--font-mincho-var, 'Shippori Mincho'), 'Hiragino Mincho ProN', 'Yu Mincho', 'YuMincho', serif;
+  --font-brush: var(--font-brush-var, 'Yuji Boku'), 'Klee One', 'Hiragino Mincho ProN', 'Yu Mincho', serif;
   --w-paper: #fbf8f1;
   --w-ink: #241f1a;
   --w-sub: #6b6156;
@@ -161,6 +162,66 @@ body {
   font-size: 3.4cqw;
   letter-spacing: 0.3em;
   color: var(--w-sub);
+}
+
+/* ---- ランチ営業時間（円相＋筆文字） ---- */
+.w-hours {
+  position: absolute;
+  left: 50%;
+  bottom: 12.5cqw;
+  transform: translateX(-50%);
+  width: 46cqw;
+  height: 46cqw;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+}
+
+.w-enso {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.92;
+}
+
+.w-hours-text {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6cqw;
+  font-family: var(--font-brush);
+  color: #1c1712;
+  text-align: center;
+  /* 背後のメニュー文字から浮かせて読みやすくする和紙色のにじみ */
+  padding: 4cqw 5cqw;
+  background: radial-gradient(
+    closest-side,
+    rgba(251, 248, 241, 0.94) 62%,
+    rgba(251, 248, 241, 0) 100%
+  );
+}
+
+.w-hours-title {
+  font-size: 5.6cqw;
+  line-height: 1;
+  letter-spacing: 0.18em;
+  text-indent: 0.18em;
+}
+
+.w-hours-time {
+  font-size: 3.7cqw;
+  line-height: 1.1;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+.w-hours-lo {
+  font-size: 2.9cqw;
+  line-height: 1.1;
+  white-space: nowrap;
+  color: #4a4038;
 }
 
 .print-btn {
