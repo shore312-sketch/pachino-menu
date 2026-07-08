@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Klee_One, Shippori_Mincho, Yuji_Boku } from "next/font/google";
+import { Klee_One, Shippori_Mincho } from "next/font/google";
 import "./globals.css";
 
 const kleeOne = Klee_One({
@@ -16,14 +16,6 @@ const shipporiMincho = Shippori_Mincho({
   display: "swap",
 });
 
-// 筆文字（営業時間の「ランチ」「11:30〜」用）
-const yujiBoku = Yuji_Boku({
-  weight: ["400"],
-  subsets: ["latin"],
-  variable: "--font-brush-var",
-  display: "swap",
-});
-
 export const metadata: Metadata = {
   title: "本日のランチ | ぱちーの",
   description: "本日のランチメニュー",
@@ -37,7 +29,7 @@ export default function RootLayout({
   return (
     <html
       lang="ja"
-      className={`${kleeOne.variable} ${shipporiMincho.variable} ${yujiBoku.variable}`}
+      className={`${kleeOne.variable} ${shipporiMincho.variable}`}
     >
       <body>{children}</body>
     </html>

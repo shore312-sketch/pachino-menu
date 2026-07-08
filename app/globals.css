@@ -7,7 +7,6 @@
 :root {
   --font-klee: var(--font-klee-var, 'Klee One'), 'Hiragino Kaku Gothic ProN', 'Yu Gothic', sans-serif;
   --font-mincho: var(--font-mincho-var, 'Shippori Mincho'), 'Hiragino Mincho ProN', 'Yu Mincho', 'YuMincho', serif;
-  --font-brush: var(--font-brush-var, 'Yuji Boku'), 'Klee One', 'Hiragino Mincho ProN', 'Yu Mincho', serif;
   --w-paper: #fbf8f1;
   --w-ink: #241f1a;
   --w-sub: #6b6156;
@@ -196,38 +195,38 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.7cqw;
-  font-family: var(--font-brush);
+  gap: 0.9cqw;
+  /* 表題と同じ明朝体に揃える */
+  font-family: var(--font-mincho);
+  font-weight: 700;
   color: #171310;
   text-align: center;
 }
 
-/* 筆文字を太らせて力強く見せる（Yuji Bokuは400のみのため輪郭を重ねる） */
 .w-hours-title {
-  font-size: 6.6cqw;
+  font-size: 6.2cqw;
   line-height: 1;
-  letter-spacing: 0.14em;
-  text-indent: 0.14em;
-  -webkit-text-stroke: 0.5cqw #171310;
+  letter-spacing: 0.22em;
+  text-indent: 0.22em;
+  -webkit-text-stroke: 0.22cqw #171310;
   paint-order: stroke fill;
 }
 
 .w-hours-time {
   font-size: 4cqw;
   line-height: 1.1;
-  letter-spacing: 0.01em;
+  letter-spacing: 0.04em;
   white-space: nowrap;
-  -webkit-text-stroke: 0.34cqw #171310;
+  -webkit-text-stroke: 0.14cqw #171310;
   paint-order: stroke fill;
 }
 
 .w-hours-lo {
-  font-size: 3cqw;
+  font-size: 2.9cqw;
   line-height: 1.1;
+  letter-spacing: 0.02em;
   white-space: nowrap;
   color: #2c2620;
-  -webkit-text-stroke: 0.18cqw #2c2620;
-  paint-order: stroke fill;
 }
 
 .print-btn {
