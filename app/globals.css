@@ -89,8 +89,7 @@ body {
 }
 
 .w-body {
-  flex: 1;
-  min-height: 0;
+  flex: 0 0 auto; /* 献立は内容ぶんの高さ。余白は下の営業時間ゾーンへ渡す */
   display: flex;
   flex-direction: row-reverse; /* A定食が右、和文の読み順どおり右→左 */
   justify-content: space-evenly;
@@ -138,7 +137,7 @@ body {
 }
 
 .v-dishes {
-  height: 56cqw;
+  height: 50cqw;
   flex-shrink: 0;
   writing-mode: vertical-rl;
   font-size: 3.2cqw;
@@ -164,17 +163,24 @@ body {
   color: var(--w-sub);
 }
 
-/* ---- ランチ営業時間（円相＋筆文字） ---- */
+/* ---- ランチ営業時間（円相＋筆文字） ----
+   献立ブロックの下に確保した専用ゾーン。メニュー文字とは重ならない。 */
 .w-hours {
-  position: absolute;
-  left: 50%;
-  bottom: 12.5cqw;
-  transform: translateX(-50%);
-  width: 46cqw;
-  height: 46cqw;
+  flex: 1 1 0;
+  min-height: 0;
   display: grid;
   place-items: center;
   pointer-events: none;
+}
+
+.w-enso-wrap {
+  position: relative;
+  width: 40cqw;
+  height: 40cqw;
+  max-height: 100%;
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
 }
 
 .w-enso {
@@ -182,7 +188,7 @@ body {
   inset: 0;
   width: 100%;
   height: 100%;
-  opacity: 0.92;
+  opacity: 0.95;
 }
 
 .w-hours-text {
@@ -190,38 +196,38 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.6cqw;
+  gap: 0.7cqw;
   font-family: var(--font-brush);
-  color: #1c1712;
+  color: #171310;
   text-align: center;
-  /* 背後のメニュー文字から浮かせて読みやすくする和紙色のにじみ */
-  padding: 4cqw 5cqw;
-  background: radial-gradient(
-    closest-side,
-    rgba(251, 248, 241, 0.94) 62%,
-    rgba(251, 248, 241, 0) 100%
-  );
 }
 
+/* 筆文字を太らせて力強く見せる（Yuji Bokuは400のみのため輪郭を重ねる） */
 .w-hours-title {
-  font-size: 5.6cqw;
+  font-size: 6.6cqw;
   line-height: 1;
-  letter-spacing: 0.18em;
-  text-indent: 0.18em;
+  letter-spacing: 0.14em;
+  text-indent: 0.14em;
+  -webkit-text-stroke: 0.5cqw #171310;
+  paint-order: stroke fill;
 }
 
 .w-hours-time {
-  font-size: 3.7cqw;
+  font-size: 4cqw;
   line-height: 1.1;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.01em;
   white-space: nowrap;
+  -webkit-text-stroke: 0.34cqw #171310;
+  paint-order: stroke fill;
 }
 
 .w-hours-lo {
-  font-size: 2.9cqw;
+  font-size: 3cqw;
   line-height: 1.1;
   white-space: nowrap;
-  color: #4a4038;
+  color: #2c2620;
+  -webkit-text-stroke: 0.18cqw #2c2620;
+  paint-order: stroke fill;
 }
 
 .print-btn {
