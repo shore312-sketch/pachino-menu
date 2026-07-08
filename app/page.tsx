@@ -52,8 +52,8 @@ export default function MenuDisplay() {
       <div className="sheet">
         <div className="washi-frame">
           <header className="w-head">
-            <p className="w-eyebrow">和食 ぱちーの</p>
-            <h1 className="w-title">本日の御品書き</h1>
+            <p className="w-eyebrow">ぱちーの 〜地の食と水〜</p>
+            <h1 className="w-title">本日の昼御膳</h1>
             <p className="w-date">{date}</p>
           </header>
 
