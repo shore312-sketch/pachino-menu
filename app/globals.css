@@ -108,6 +108,7 @@ body {
   align-items: center;
   gap: 2cqw;
   min-width: 0;
+  flex-shrink: 0; /* 列が潰れて文字が重ならないように */
 }
 
 .v-sethead {
@@ -160,6 +161,85 @@ body {
   font-size: 3.4cqw;
   letter-spacing: 0.3em;
   color: var(--w-sub);
+}
+
+/* 4列（テイクアウトあり）のときは全体を縮めて横幅に収める */
+.w-body.has-takeout {
+  padding-top: 2cqw;
+  gap: 0;
+}
+.w-body.has-takeout .v-label {
+  font-size: 3.7cqw;
+  letter-spacing: 0.14em;
+  text-indent: 0.14em;
+}
+.w-body.has-takeout .v-dishes {
+  height: 54cqw;
+  font-size: 2.65cqw;
+  line-height: 1.42;
+}
+.w-body.has-takeout .v-price {
+  font-size: 3.1cqw;
+}
+.w-body.has-takeout .v-set {
+  gap: 1.6cqw;
+}
+.w-body.has-takeout .v-rule {
+  margin: 2cqw 0.4cqw;
+}
+
+/* ---- テイクアウト部門（4列目） ---- */
+.v-takeout {
+  padding: 0 1.4cqw;
+  background: linear-gradient(
+    180deg,
+    rgba(166, 58, 50, 0.055),
+    rgba(166, 58, 50, 0.02)
+  );
+  border-radius: 1.5cqw;
+}
+
+.v-rule-tk {
+  background: rgba(166, 58, 50, 0.35);
+}
+
+.w-body .v-label-tk {
+  font-size: 2.75cqw;
+  letter-spacing: 0.02em;
+  text-indent: 0.02em;
+  white-space: nowrap;
+  color: var(--w-red);
+}
+
+.v-badge-tk {
+  font-size: 2.1cqw;
+  white-space: nowrap;
+  color: var(--w-red);
+  border-color: rgba(166, 58, 50, 0.5);
+}
+
+.v-tk-list {
+  display: flex;
+  flex-direction: column; /* 縦書きなので視覚的には右→左に品目が並ぶ */
+  flex-wrap: wrap;
+  align-content: flex-start;
+  gap: 0 1.2cqw;
+}
+
+.w-body .v-tk-item {
+  font-size: 2.65cqw;
+  letter-spacing: 0.02em;
+  line-height: 1.5;
+}
+
+.tcy {
+  text-combine-upright: all;
+  -webkit-text-combine: horizontal;
+  letter-spacing: 0;
+}
+
+.v-tk-gap {
+  font-size: 0.6em;
 }
 
 /* ---- ランチ営業時間（円相＋筆文字） ----
@@ -437,3 +517,51 @@ body {
 }
 
 .save-status.error { color: #c0392b; }
+
+/* ---- 管理画面：テイクアウト部門 ---- */
+.takeout-card {
+  border: 1px solid rgba(166, 58, 50, 0.25);
+  background: linear-gradient(180deg, #fff8f7, #fff);
+}
+
+.takeout-title {
+  color: #a63a32;
+}
+
+.takeout-hint {
+  margin-top: -0.4rem;
+  margin-bottom: 0.9rem;
+}
+
+.takeout-row {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  margin-bottom: 0.6rem;
+}
+
+.takeout-name {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.takeout-price {
+  flex: 0 0 6.5rem;
+  width: 6.5rem;
+}
+
+.takeout-remove {
+  flex: 0 0 auto;
+}
+
+.takeout-add {
+  margin-top: 0.4rem;
+  padding: 0.65rem;
+  color: #a63a32;
+  border-color: #a63a32;
+  font-size: 0.95rem;
+}
+
+.takeout-add:hover {
+  background: rgba(166, 58, 50, 0.06);
+}
