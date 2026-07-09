@@ -10,11 +10,6 @@ type MenuItem = {
   note: string;
 };
 
-type TakeoutItem = {
-  name: string;
-  price: string;
-};
-
 const WEEKDAYS = ["日", "月", "火", "水", "木", "金", "土"];
 
 function todayLabel() {
@@ -24,17 +19,12 @@ function todayLabel() {
 
 export default function MenuDisplay() {
   const [menu, setMenu] = useState<MenuItem[]>([]);
-  const [takeout, setTakeout] = useState<TakeoutItem[]>([]);
   const [date, setDate] = useState("");
 
   async function fetchMenu() {
     try {
-      const [menuRes, takeoutRes] = await Promise.all([
-        fetch("/api/menu", { cache: "no-store" }),
-        fetch("/api/takeout", { cache: "no-store" }),
-      ]);
-      if (menuRes.ok) setMenu(await menuRes.json());
-      if (takeoutRes.ok) setTakeout(await takeoutRes.json());
+      const res = await fetch("/api/menu", { cache: "no-store" });
+      if (res.ok) setMenu(await res.json());
     } catch {
       // ネットワークエラー時はそのまま表示維持
     }
@@ -67,7 +57,7 @@ export default function MenuDisplay() {
             <p className="w-date">{date}</p>
           </header>
 
-          <div className={`w-body${takeout.length > 0 ? " has-takeout" : ""}`}>
+          <div className="w-body">
             {menu.map((item, i) => (
               <Fragment key={item.set_label}>
                 {i > 0 && <div className="v-rule" aria-hidden="true" />}
@@ -89,34 +79,7 @@ export default function MenuDisplay() {
               </Fragment>
             ))}
 
-            {takeout.length > 0 && (
-              <>
-                <div className="v-rule v-rule-tk" aria-hidden="true" />
-                <div className="v-set v-takeout">
-                  <div className="v-sethead">
-                    <p className="v-label v-label-tk">テイクアウト</p>
-                    <p className="v-badge v-badge-tk">ご予約承ります</p>
-                  </div>
-                  <div className="v-dishes v-tk-list">
-                    {takeout.map((t, j) => (
-                      <p className="v-tk-item" key={j}>
-                        {t.name}
-                        {t.price && (
-                          <>
-                            <span className="v-tk-gap">　</span>
-                            <span className="tcy">{t.price}</span>円
-                          </>
-                        )}
-                      </p>
-                    ))}
-                  </div>
-                </div>
-              </>
-            )}
-
-            {menu.length === 0 && takeout.length === 0 && (
-              <p className="w-empty">準備中です</p>
-            )}
+            {menu.length === 0 && <p className="w-empty">準備中です</p>}
           </div>
 
           <div className="w-hours">

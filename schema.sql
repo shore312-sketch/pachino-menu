@@ -16,10 +16,3 @@ INSERT OR IGNORE INTO lunch_menu (set_label, dishes, price, note, display_order)
   ('C', 'お刺身盛り合わせ（限定）
 エビ天大葉巻き ごしきの塩で
 若鶏ももの塩つくねバーグ', '2,000', '限定23食', 3);
-
-CREATE TABLE IF NOT EXISTS takeout_menu (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  name TEXT NOT NULL,
-  price TEXT NOT NULL DEFAULT '',
-  display_order INTEGER NOT NULL DEFAULT 0
-);

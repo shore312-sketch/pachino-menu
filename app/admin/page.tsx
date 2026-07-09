@@ -9,79 +9,51 @@ type MenuItem = {
   note: string;
 };
 
-type TakeoutItem = {
-  name: string;
-  price: string;
-};
-
 const LABELS = ["A", "B", "C", "D", "E"];
 const DRAFT_KEY = "pachino-menu-draft";
-const TAKEOUT_DRAFT_KEY = "pachino-takeout-draft";
-const MAX_TAKEOUT = 8;
 
 const emptyItem = (): MenuItem => ({ dishes: "", price: "", note: "" });
-const emptyTakeout = (): TakeoutItem => ({ name: "", price: "" });
 
 export default function AdminPage() {
   const router = useRouter();
   const [menu, setMenu] = useState<MenuItem[]>([emptyItem()]);
-  const [takeout, setTakeout] = useState<TakeoutItem[]>([emptyTakeout()]);
   const [status, setStatus] = useState<{ msg: string; error: boolean } | null>(null);
   const [saving, setSaving] = useState(false);
   const loaded = useRef(false);
 
   // 起動時：まず端末の下書きを復元、なければDBから取得
   useEffect(() => {
-    const menuDraft = localStorage.getItem(DRAFT_KEY);
-    const takeoutDraft = localStorage.getItem(TAKEOUT_DRAFT_KEY);
-    if (menuDraft || takeoutDraft) {
+    const draft = localStorage.getItem(DRAFT_KEY);
+    if (draft) {
       try {
-        const parsedMenu = menuDraft ? JSON.parse(menuDraft) : null;
-        const parsedTakeout = takeoutDraft ? JSON.parse(takeoutDraft) : null;
+        const parsed = JSON.parse(draft);
         // localStorageはSSRで読めないため、復元はマウント後の非同期タイミングで行う
         Promise.resolve().then(() => {
-          if (parsedMenu) setMenu(parsedMenu);
-          if (parsedTakeout) setTakeout(parsedTakeout);
+          setMenu(parsed);
           loaded.current = true;
         });
         return;
       } catch {
         localStorage.removeItem(DRAFT_KEY);
-        localStorage.removeItem(TAKEOUT_DRAFT_KEY);
       }
     }
-    Promise.all([
-      fetch("/api/menu").then((r) => r.json()),
-      fetch("/api/takeout").then((r) => r.json()),
-    ])
-      .then(
-        ([menuData, takeoutData]: [
-          Array<MenuItem & { set_label: string }>,
-          TakeoutItem[],
-        ]) => {
-          setMenu(
-            menuData.length > 0
-              ? menuData.map(({ dishes, price, note }) => ({ dishes, price, note }))
-              : [emptyItem()]
-          );
-          setTakeout(takeoutData.length > 0 ? takeoutData : [emptyTakeout()]);
-        }
-      )
-      .catch(() => {
-        setMenu([emptyItem()]);
-        setTakeout([emptyTakeout()]);
+    fetch("/api/menu")
+      .then((r) => r.json())
+      .then((data: Array<MenuItem & { set_label: string }>) => {
+        setMenu(data.length > 0
+          ? data.map(({ dishes, price, note }) => ({ dishes, price, note }))
+          : [emptyItem()]
+        );
       })
-      .finally(() => {
-        loaded.current = true;
-      });
+      .catch(() => setMenu([emptyItem()]))
+      .finally(() => { loaded.current = true; });
   }, []);
 
   // 入力のたびに下書きを端末に保存
   useEffect(() => {
-    if (!loaded.current) return;
+    if (!loaded.current || menu.length === 0) return;
     localStorage.setItem(DRAFT_KEY, JSON.stringify(menu));
-    localStorage.setItem(TAKEOUT_DRAFT_KEY, JSON.stringify(takeout));
-  }, [menu, takeout]);
+  }, [menu]);
 
   function updateField(index: number, field: keyof MenuItem, value: string) {
     setMenu((prev) =>
@@ -98,41 +70,18 @@ export default function AdminPage() {
     setMenu((prev) => prev.filter((_, i) => i !== index));
   }
 
-  function updateTakeout(index: number, field: keyof TakeoutItem, value: string) {
-    setTakeout((prev) =>
-      prev.map((item, i) => (i === index ? { ...item, [field]: value } : item))
-    );
-  }
-
-  function addTakeout() {
-    if (takeout.length >= MAX_TAKEOUT) return;
-    setTakeout((prev) => [...prev, emptyTakeout()]);
-  }
-
-  function removeTakeout(index: number) {
-    setTakeout((prev) => prev.filter((_, i) => i !== index));
-  }
-
   async function handleSave() {
     setSaving(true);
     setStatus(null);
     try {
-      const menuBody = menu.map((item, i) => ({ set_label: LABELS[i], ...item }));
-      const [menuRes, takeoutRes] = await Promise.all([
-        fetch("/api/admin/menu", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(menuBody),
-        }),
-        fetch("/api/admin/takeout", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(takeout),
-        }),
-      ]);
-      if (!menuRes.ok || !takeoutRes.ok) throw new Error();
-      localStorage.removeItem(DRAFT_KEY);
-      localStorage.removeItem(TAKEOUT_DRAFT_KEY);
+      const body = menu.map((item, i) => ({ set_label: LABELS[i], ...item }));
+      const res = await fetch("/api/admin/menu", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
+      if (!res.ok) throw new Error();
+      localStorage.removeItem(DRAFT_KEY); // 保存成功したら下書き削除
       setStatus({ msg: "保存しました！お客さん画面に切り替えます...", error: false });
       setTimeout(() => router.push("/"), 1500);
     } catch {
@@ -143,7 +92,7 @@ export default function AdminPage() {
 
   return (
     <div className="admin-wrap">
-      <h1 className="admin-title">本日の昼御膳 編集</h1>
+      <h1 className="admin-title">本日のランチ 編集</h1>
 
       <div className="admin-form">
         {menu.map((item, index) => (
@@ -202,51 +151,6 @@ export default function AdminPage() {
             ＋ 定食を追加
           </button>
         )}
-
-        {/* テイクアウト部門 */}
-        <div className="set-card takeout-card">
-          <div className="set-card-header">
-            <p className="set-card-title takeout-title">テイクアウト</p>
-          </div>
-          <p className="field-hint takeout-hint">
-            お弁当など、テイクアウトの品を入力してください。空欄の行は保存されません。
-          </p>
-
-          {takeout.map((item, index) => (
-            <div key={index} className="takeout-row">
-              <input
-                className="field-input takeout-name"
-                type="text"
-                value={item.name}
-                onChange={(e) => updateTakeout(index, "name", e.target.value)}
-                placeholder="品名（例: 唐揚げ弁当）"
-              />
-              <input
-                className="field-input takeout-price"
-                type="text"
-                inputMode="numeric"
-                value={item.price}
-                onChange={(e) => updateTakeout(index, "price", e.target.value)}
-                placeholder="価格"
-              />
-              {takeout.length > 1 && (
-                <button
-                  className="remove-btn takeout-remove"
-                  onClick={() => removeTakeout(index)}
-                  aria-label={`${index + 1}行目を削除`}
-                >
-                  削除
-                </button>
-              )}
-            </div>
-          ))}
-
-          {takeout.length < MAX_TAKEOUT && (
-            <button className="add-btn takeout-add" onClick={addTakeout}>
-              ＋ 品を追加
-            </button>
-          )}
-        </div>
 
         <button className="save-btn" onClick={handleSave} disabled={saving}>
           {saving ? "保存中..." : "保存する"}

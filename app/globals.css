@@ -108,7 +108,6 @@ body {
   align-items: center;
   gap: 2cqw;
   min-width: 0;
-  flex-shrink: 0; /* 列が潰れて文字が重ならないように */
 }
 
 .v-sethead {
@@ -161,88 +160,6 @@ body {
   font-size: 3.4cqw;
   letter-spacing: 0.3em;
   color: var(--w-sub);
-}
-
-/* 4列（テイクアウトあり）のときは全体を縮めて横幅に収める */
-.w-body.has-takeout {
-  padding-top: 2cqw;
-  gap: 0;
-}
-.w-body.has-takeout .v-label {
-  font-size: 3.7cqw;
-  letter-spacing: 0.14em;
-  text-indent: 0.14em;
-}
-.w-body.has-takeout .v-dishes {
-  height: 54cqw;
-  font-size: 2.7cqw;
-  line-height: 1.44;
-}
-.w-body.has-takeout .v-price {
-  font-size: 3.1cqw;
-}
-/* テイクアウトは定食より低い固定高さでコンパクトにまとめる
-   （縦書きは高さ固定でないと印刷で列幅が崩れるため auto にしない） */
-.w-body.has-takeout .v-tk-list {
-  height: 40cqw;
-}
-.w-body.has-takeout .v-set {
-  gap: 1.6cqw;
-}
-.w-body.has-takeout .v-rule {
-  margin: 2cqw 0.4cqw;
-}
-
-/* ---- テイクアウト部門（4列目・定食より小さめにまとめる） ---- */
-.v-takeout {
-  align-self: flex-start; /* 内容ぶんの高さでコンパクトに */
-  gap: 1.2cqw;
-  padding: 2cqw 1.6cqw 2.4cqw;
-  border: 1px solid rgba(166, 58, 50, 0.22);
-  background: linear-gradient(
-    180deg,
-    rgba(166, 58, 50, 0.06),
-    rgba(166, 58, 50, 0.025)
-  );
-  border-radius: 2cqw;
-}
-
-.v-rule-tk {
-  background: rgba(166, 58, 50, 0.35);
-}
-
-.w-body .v-label-tk {
-  font-size: 2.5cqw;
-  letter-spacing: 0.02em;
-  text-indent: 0.02em;
-  white-space: nowrap;
-  color: var(--w-red);
-}
-
-.v-badge-tk {
-  font-size: 1.85cqw;
-  white-space: nowrap;
-  color: var(--w-red);
-  border-color: rgba(166, 58, 50, 0.5);
-}
-
-/* 縦書きのブロック配置（定食の料理名と同じ仕組み）。
-   flexは縦書きと相性が悪く印刷で崩れるため使わない。高さは has-takeout 側で指定。 */
-
-.w-body .v-tk-item {
-  font-size: 2.3cqw;
-  letter-spacing: 0.02em;
-  line-height: 1.7;
-}
-
-.tcy {
-  text-combine-upright: all;
-  -webkit-text-combine: horizontal;
-  letter-spacing: 0;
-}
-
-.v-tk-gap {
-  font-size: 0.6em;
 }
 
 /* ---- ランチ営業時間（円相＋筆文字） ----
@@ -520,51 +437,3 @@ body {
 }
 
 .save-status.error { color: #c0392b; }
-
-/* ---- 管理画面：テイクアウト部門 ---- */
-.takeout-card {
-  border: 1px solid rgba(166, 58, 50, 0.25);
-  background: linear-gradient(180deg, #fff8f7, #fff);
-}
-
-.takeout-title {
-  color: #a63a32;
-}
-
-.takeout-hint {
-  margin-top: -0.4rem;
-  margin-bottom: 0.9rem;
-}
-
-.takeout-row {
-  display: flex;
-  gap: 0.5rem;
-  align-items: center;
-  margin-bottom: 0.6rem;
-}
-
-.takeout-name {
-  flex: 1 1 auto;
-  min-width: 0;
-}
-
-.takeout-price {
-  flex: 0 0 6.5rem;
-  width: 6.5rem;
-}
-
-.takeout-remove {
-  flex: 0 0 auto;
-}
-
-.takeout-add {
-  margin-top: 0.4rem;
-  padding: 0.65rem;
-  color: #a63a32;
-  border-color: #a63a32;
-  font-size: 0.95rem;
-}
-
-.takeout-add:hover {
-  background: rgba(166, 58, 50, 0.06);
-}
