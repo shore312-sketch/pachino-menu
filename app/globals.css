@@ -162,11 +162,20 @@ body {
   color: var(--w-sub);
 }
 
-/* ---- ランチ営業時間（円相＋筆文字） ----
-   献立ブロックの下に確保した専用ゾーン。メニュー文字とは重ならない。 */
-.w-hours {
+/* ---- 下部：左=ランチ営業(円相)／右=テイクアウト(横書き) ---- */
+.w-footer {
   flex: 1 1 0;
   min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3cqw;
+  padding: 1cqw 1.5cqw 0;
+}
+
+/* ---- ランチ営業時間（円相＋筆文字） ---- */
+.w-hours {
+  flex: 0 0 auto;
   display: grid;
   place-items: center;
   pointer-events: none;
@@ -174,8 +183,8 @@ body {
 
 .w-enso-wrap {
   position: relative;
-  width: 40cqw;
-  height: 40cqw;
+  width: 38cqw;
+  height: 38cqw;
   max-height: 100%;
   aspect-ratio: 1;
   display: grid;
@@ -227,6 +236,76 @@ body {
   letter-spacing: 0.02em;
   white-space: nowrap;
   color: #2c2620;
+}
+
+/* ---- テイクアウト（横書き・円相の右） ---- */
+.tk-panel {
+  flex: 1 1 0;
+  min-width: 0;
+  align-self: center;
+  padding-left: 3cqw;
+  border-left: 1px solid rgba(166, 58, 50, 0.28);
+}
+
+.tk-head {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0.5em 0.9em;
+  font-family: var(--font-mincho);
+  font-weight: 700;
+  font-size: 3.2cqw;
+  letter-spacing: 0.08em;
+  color: var(--w-red);
+  margin-bottom: 1.6cqw;
+}
+
+.tk-title {
+  white-space: nowrap;
+}
+
+.tk-sub {
+  font-family: var(--font-mincho);
+  font-weight: 400;
+  font-size: 2cqw;
+  letter-spacing: 0.06em;
+  color: var(--w-red);
+  border: 1px solid rgba(166, 58, 50, 0.5);
+  border-radius: 3px;
+  padding: 0.15em 0.6em;
+  white-space: nowrap;
+}
+
+.tk-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 1cqw;
+}
+
+.tk-item {
+  display: flex;
+  align-items: baseline;
+  font-size: 2.9cqw;
+  line-height: 1.2;
+  color: #241f1a;
+}
+
+.tk-name {
+  white-space: nowrap;
+}
+
+.tk-leader {
+  flex: 1 1 auto;
+  margin: 0 0.7em;
+  border-bottom: 1px dotted rgba(60, 50, 40, 0.4);
+  transform: translateY(-0.3em);
+}
+
+.tk-price {
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
 }
 
 .print-btn {
@@ -437,3 +516,51 @@ body {
 }
 
 .save-status.error { color: #c0392b; }
+
+/* ---- 管理画面：テイクアウト部門 ---- */
+.takeout-card {
+  border: 1px solid rgba(166, 58, 50, 0.25);
+  background: linear-gradient(180deg, #fff8f7, #fff);
+}
+
+.takeout-title {
+  color: #a63a32;
+}
+
+.takeout-hint {
+  margin-top: -0.4rem;
+  margin-bottom: 0.9rem;
+}
+
+.takeout-row {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  margin-bottom: 0.6rem;
+}
+
+.takeout-name {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.takeout-price {
+  flex: 0 0 6.5rem;
+  width: 6.5rem;
+}
+
+.takeout-remove {
+  flex: 0 0 auto;
+}
+
+.takeout-add {
+  margin-top: 0.4rem;
+  padding: 0.65rem;
+  color: #a63a32;
+  border-color: #a63a32;
+  font-size: 0.95rem;
+}
+
+.takeout-add:hover {
+  background: rgba(166, 58, 50, 0.06);
+}

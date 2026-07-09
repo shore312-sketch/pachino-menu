@@ -10,6 +10,11 @@ type MenuItem = {
   note: string;
 };
 
+type TakeoutItem = {
+  name: string;
+  price: string;
+};
+
 const WEEKDAYS = ["日", "月", "火", "水", "木", "金", "土"];
 
 function todayLabel() {
@@ -19,12 +24,17 @@ function todayLabel() {
 
 export default function MenuDisplay() {
   const [menu, setMenu] = useState<MenuItem[]>([]);
+  const [takeout, setTakeout] = useState<TakeoutItem[]>([]);
   const [date, setDate] = useState("");
 
   async function fetchMenu() {
     try {
-      const res = await fetch("/api/menu", { cache: "no-store" });
-      if (res.ok) setMenu(await res.json());
+      const [menuRes, takeoutRes] = await Promise.all([
+        fetch("/api/menu", { cache: "no-store" }),
+        fetch("/api/takeout", { cache: "no-store" }),
+      ]);
+      if (menuRes.ok) setMenu(await menuRes.json());
+      if (takeoutRes.ok) setTakeout(await takeoutRes.json());
     } catch {
       // ネットワークエラー時はそのまま表示維持
     }
@@ -82,25 +92,45 @@ export default function MenuDisplay() {
             {menu.length === 0 && <p className="w-empty">準備中です</p>}
           </div>
 
-          <div className="w-hours">
-            <div
-              className="w-enso-wrap"
-              aria-label="ランチ営業時間 11時30分から14時 ラストオーダー13時10分"
-            >
-              <svg
-                className="w-enso"
-                viewBox="0 0 120 120"
-                aria-hidden="true"
-                focusable="false"
+          <div className="w-footer">
+            <div className="w-hours">
+              <div
+                className="w-enso-wrap"
+                aria-label="ランチ営業時間 11時30分から14時 ラストオーダー13時10分"
               >
-                <path d={ENSO_PATH} fill="#c9302c" />
-              </svg>
-              <div className="w-hours-text">
-                <span className="w-hours-title">ランチ</span>
-                <span className="w-hours-time">11:30〜14:00</span>
-                <span className="w-hours-lo">(L.o13:10)</span>
+                <svg
+                  className="w-enso"
+                  viewBox="0 0 120 120"
+                  aria-hidden="true"
+                  focusable="false"
+                >
+                  <path d={ENSO_PATH} fill="#c9302c" />
+                </svg>
+                <div className="w-hours-text">
+                  <span className="w-hours-title">ランチ</span>
+                  <span className="w-hours-time">11:30〜14:00</span>
+                  <span className="w-hours-lo">(L.o13:10)</span>
+                </div>
               </div>
             </div>
+
+            {takeout.length > 0 && (
+              <div className="tk-panel">
+                <p className="tk-head">
+                  <span className="tk-title">テイクアウト</span>
+                  <span className="tk-sub">ご予約承ります</span>
+                </p>
+                <ul className="tk-list">
+                  {takeout.map((t, j) => (
+                    <li className="tk-item" key={j}>
+                      <span className="tk-name">{t.name}</span>
+                      <span className="tk-leader" aria-hidden="true" />
+                      {t.price && <span className="tk-price">{t.price}円</span>}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
           </div>
         </div>
       </div>
