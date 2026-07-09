@@ -6,16 +6,20 @@ type TakeoutItem = {
   price: string;
 };
 
+type TakeoutPayload = {
+  items: TakeoutItem[];
+  note: string;
+};
+
 export async function POST(request: NextRequest) {
   const { env } = await getCloudflareContext({ async: true });
-  const body: TakeoutItem[] = await request.json();
+  const body: TakeoutPayload = await request.json();
 
   // 空行（品名なし）は保存しない
-  const items = body.filter((item) => item.name.trim() !== "");
+  const items = (body.items ?? []).filter((item) => item.name.trim() !== "");
 
-  // 全件入れ替え
+  // 品目を全件入れ替え
   await env.DB.prepare("DELETE FROM takeout_menu").run();
-
   for (let i = 0; i < items.length; i++) {
     const item = items[i];
     await env.DB.prepare(
@@ -25,6 +29,14 @@ export async function POST(request: NextRequest) {
       .bind(item.name, item.price, i + 1)
       .run();
   }
+
+  // ひとこと（ご予約承ります 等）を保存
+  await env.DB.prepare(
+    `INSERT INTO settings (key, value) VALUES ('takeout_note', ?)
+     ON CONFLICT(key) DO UPDATE SET value = excluded.value`
+  )
+    .bind(body.note ?? "")
+    .run();
 
   return NextResponse.json({ ok: true });
 }

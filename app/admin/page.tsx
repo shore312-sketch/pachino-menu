@@ -17,6 +17,7 @@ type TakeoutItem = {
 const LABELS = ["A", "B", "C", "D", "E"];
 const DRAFT_KEY = "pachino-menu-draft";
 const TAKEOUT_DRAFT_KEY = "pachino-takeout-draft";
+const TAKEOUT_NOTE_DRAFT_KEY = "pachino-takeout-note-draft";
 const MAX_TAKEOUT = 8;
 
 const emptyItem = (): MenuItem => ({ dishes: "", price: "", note: "" });
@@ -26,6 +27,7 @@ export default function AdminPage() {
   const router = useRouter();
   const [menu, setMenu] = useState<MenuItem[]>([emptyItem()]);
   const [takeout, setTakeout] = useState<TakeoutItem[]>([emptyTakeout()]);
+  const [takeoutNote, setTakeoutNote] = useState("ご予約承ります");
   const [status, setStatus] = useState<{ msg: string; error: boolean } | null>(null);
   const [saving, setSaving] = useState(false);
   const loaded = useRef(false);
@@ -34,7 +36,8 @@ export default function AdminPage() {
   useEffect(() => {
     const menuDraft = localStorage.getItem(DRAFT_KEY);
     const takeoutDraft = localStorage.getItem(TAKEOUT_DRAFT_KEY);
-    if (menuDraft || takeoutDraft) {
+    const noteDraft = localStorage.getItem(TAKEOUT_NOTE_DRAFT_KEY);
+    if (menuDraft || takeoutDraft || noteDraft !== null) {
       try {
         const parsedMenu = menuDraft ? JSON.parse(menuDraft) : null;
         const parsedTakeout = takeoutDraft ? JSON.parse(takeoutDraft) : null;
@@ -42,12 +45,14 @@ export default function AdminPage() {
         Promise.resolve().then(() => {
           if (parsedMenu) setMenu(parsedMenu);
           if (parsedTakeout) setTakeout(parsedTakeout);
+          if (noteDraft !== null) setTakeoutNote(noteDraft);
           loaded.current = true;
         });
         return;
       } catch {
         localStorage.removeItem(DRAFT_KEY);
         localStorage.removeItem(TAKEOUT_DRAFT_KEY);
+        localStorage.removeItem(TAKEOUT_NOTE_DRAFT_KEY);
       }
     }
     Promise.all([
@@ -57,14 +62,16 @@ export default function AdminPage() {
       .then(
         ([menuData, takeoutData]: [
           Array<MenuItem & { set_label: string }>,
-          TakeoutItem[],
+          { items: TakeoutItem[]; note: string },
         ]) => {
           setMenu(
             menuData.length > 0
               ? menuData.map(({ dishes, price, note }) => ({ dishes, price, note }))
               : [emptyItem()]
           );
-          setTakeout(takeoutData.length > 0 ? takeoutData : [emptyTakeout()]);
+          const items = takeoutData.items ?? [];
+          setTakeout(items.length > 0 ? items : [emptyTakeout()]);
+          setTakeoutNote(takeoutData.note ?? "");
         }
       )
       .catch(() => {
@@ -81,7 +88,8 @@ export default function AdminPage() {
     if (!loaded.current) return;
     localStorage.setItem(DRAFT_KEY, JSON.stringify(menu));
     localStorage.setItem(TAKEOUT_DRAFT_KEY, JSON.stringify(takeout));
-  }, [menu, takeout]);
+    localStorage.setItem(TAKEOUT_NOTE_DRAFT_KEY, takeoutNote);
+  }, [menu, takeout, takeoutNote]);
 
   function updateField(index: number, field: keyof MenuItem, value: string) {
     setMenu((prev) =>
@@ -127,12 +135,13 @@ export default function AdminPage() {
         fetch("/api/admin/takeout", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(takeout),
+          body: JSON.stringify({ items: takeout, note: takeoutNote }),
         }),
       ]);
       if (!menuRes.ok || !takeoutRes.ok) throw new Error();
       localStorage.removeItem(DRAFT_KEY);
       localStorage.removeItem(TAKEOUT_DRAFT_KEY);
+      localStorage.removeItem(TAKEOUT_NOTE_DRAFT_KEY);
       setStatus({ msg: "保存しました！お客さん画面に切り替えます...", error: false });
       setTimeout(() => router.push("/"), 1500);
     } catch {
@@ -246,6 +255,22 @@ export default function AdminPage() {
               ＋ 品を追加
             </button>
           )}
+
+          <div className="field-group takeout-note-group">
+            <label className="field-label">
+              リストの下のひとこと（省略可）
+            </label>
+            <input
+              className="field-input"
+              type="text"
+              value={takeoutNote}
+              onChange={(e) => setTakeoutNote(e.target.value)}
+              placeholder="例: ご予約承ります"
+            />
+            <p className="field-hint">
+              「ご予約承ります」「前日までにご予約ください」など。空欄にすると表示されません。
+            </p>
+          </div>
         </div>
 
         <button className="save-btn" onClick={handleSave} disabled={saving}>

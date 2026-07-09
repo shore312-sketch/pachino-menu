@@ -25,6 +25,7 @@ function todayLabel() {
 export default function MenuDisplay() {
   const [menu, setMenu] = useState<MenuItem[]>([]);
   const [takeout, setTakeout] = useState<TakeoutItem[]>([]);
+  const [takeoutNote, setTakeoutNote] = useState("");
   const [date, setDate] = useState("");
 
   async function fetchMenu() {
@@ -34,7 +35,11 @@ export default function MenuDisplay() {
         fetch("/api/takeout", { cache: "no-store" }),
       ]);
       if (menuRes.ok) setMenu(await menuRes.json());
-      if (takeoutRes.ok) setTakeout(await takeoutRes.json());
+      if (takeoutRes.ok) {
+        const data: { items: TakeoutItem[]; note: string } = await takeoutRes.json();
+        setTakeout(data.items ?? []);
+        setTakeoutNote(data.note ?? "");
+      }
     } catch {
       // ネットワークエラー時はそのまま表示維持
     }
@@ -118,7 +123,6 @@ export default function MenuDisplay() {
               <div className="tk-panel">
                 <p className="tk-head">
                   <span className="tk-title">テイクアウト</span>
-                  <span className="tk-sub">ご予約承ります</span>
                 </p>
                 <ul className="tk-list">
                   {takeout.map((t, j) => (
@@ -129,6 +133,7 @@ export default function MenuDisplay() {
                     </li>
                   ))}
                 </ul>
+                {takeoutNote && <p className="tk-note">{takeoutNote}</p>}
               </div>
             )}
           </div>
