@@ -1,13 +1,13 @@
 "use client";
 
-import { Fragment, useEffect, useState } from "react";
-import { ENSO_PATH } from "./enso-path";
+import { CSSProperties, useEffect, useState } from "react";
 
 type MenuItem = {
   set_label: string;
   dishes: string;
   price: string;
   note: string;
+  limit_note: string;
 };
 
 type TakeoutItem = {
@@ -17,16 +17,41 @@ type TakeoutItem = {
 
 const WEEKDAYS = ["日", "月", "火", "水", "木", "金", "土"];
 
+// 定食ごとのテーマ色（A=紺、B=金、C=緑…）
+const SET_COLORS = ["#24466e", "#9c7c22", "#4d6b3c", "#8a3b45", "#4a4a72"];
+
 function todayLabel() {
   const now = new Date();
-  return `${now.getMonth() + 1}月${now.getDate()}日（${WEEKDAYS[now.getDay()]}曜日）`;
+  return {
+    md: `${now.getMonth() + 1}月${now.getDate()}日`,
+    wd: `（${WEEKDAYS[now.getDay()]}曜日）`,
+  };
+}
+
+// "2000" → "2,000"（数字以外が混ざっていたらそのまま表示）
+function formatPrice(price: string) {
+  const digits = price.replace(/[,，\s]/g, "");
+  return /^\d+$/.test(digits) ? Number(digits).toLocaleString("ja-JP") : price;
+}
+
+// 丸バッジ内で「限定」の後で改行して収まりよく見せる
+function LimitBadgeText({ text }: { text: string }) {
+  const m = text.match(/^限定(.+)$/);
+  if (!m) return <>{text}</>;
+  return (
+    <>
+      限定
+      <br />
+      {m[1]}
+    </>
+  );
 }
 
 export default function MenuDisplay() {
   const [menu, setMenu] = useState<MenuItem[]>([]);
   const [takeout, setTakeout] = useState<TakeoutItem[]>([]);
   const [takeoutNote, setTakeoutNote] = useState("");
-  const [date, setDate] = useState("");
+  const [date, setDate] = useState({ md: "", wd: "" });
 
   async function fetchMenu() {
     try {
@@ -65,78 +90,83 @@ export default function MenuDisplay() {
       </button>
 
       <div className="sheet">
-        <div className="washi-frame">
-          <header className="w-head">
-            <p className="w-eyebrow">ぱちーの 〜地の食と水〜</p>
-            <h1 className="w-title">本日の昼御膳</h1>
-            <p className="w-date">{date}</p>
+        <div className="h-frame">
+          <header className="h-head">
+            <p className="h-brand">
+              ぱちーの<span className="h-brand-sub">〜地の食と水〜</span>
+            </p>
+            <div className="h-titlerow">
+              <h1 className="h-title">本日の昼御膳</h1>
+              <p className="h-date">
+                <span className="h-date-md">{date.md}</span>
+                <span className="h-date-wd">{date.wd}</span>
+              </p>
+            </div>
           </header>
 
-          <div className="w-body">
+          <div className="h-cards">
             {menu.map((item, i) => (
-              <Fragment key={item.set_label}>
-                {i > 0 && <div className="v-rule" aria-hidden="true" />}
-                <div className="v-set">
-                  <div className="v-sethead">
-                    <p className="v-label">{item.set_label}定食</p>
-                    {item.note && <p className="v-badge">{item.note}</p>}
-                  </div>
-                  <div className="v-dishes">
+              <section
+                className="hcard"
+                key={item.set_label}
+                style={{ "--set-color": SET_COLORS[i % SET_COLORS.length] } as CSSProperties}
+              >
+                <div className="hcard-head">
+                  <span className="hcard-letter">{item.set_label}</span>
+                  <span className="hcard-teishoku">定食</span>
+                  {item.note && <span className="hcard-sub">{item.note}</span>}
+                </div>
+                {item.limit_note && (
+                  <p className="hcard-limit">
+                    <LimitBadgeText text={item.limit_note} />
+                  </p>
+                )}
+                <div className="hcard-body">
+                  <ul className="hcard-dishes">
                     {item.dishes
                       .split(/\r?\n/)
                       .filter((line) => line.trim() !== "")
                       .map((dish, j) => (
-                        <p key={j}>{dish}</p>
+                        <li key={j}>{dish}</li>
                       ))}
-                  </div>
-                  <p className="v-price">{item.price}円</p>
+                  </ul>
+                  <p className="hcard-price">
+                    <span className="hcard-price-num">{formatPrice(item.price)}</span>円
+                  </p>
                 </div>
-              </Fragment>
+              </section>
             ))}
 
-            {menu.length === 0 && <p className="w-empty">準備中です</p>}
-          </div>
-
-          <div className="w-footer">
-            <div className="w-hours">
-              <div
-                className="w-enso-wrap"
-                aria-label="ランチ営業時間 11時30分から14時 ラストオーダー13時10分"
-              >
-                <svg
-                  className="w-enso"
-                  viewBox="0 0 120 120"
-                  aria-hidden="true"
-                  focusable="false"
-                >
-                  <path d={ENSO_PATH} fill="#c9302c" />
-                </svg>
-                <div className="w-hours-text">
-                  <span className="w-hours-title">ランチ</span>
-                  <span className="w-hours-time">11:30〜14:00</span>
-                  <span className="w-hours-lo">(L.o13:10)</span>
-                </div>
-              </div>
-            </div>
-
             {takeout.length > 0 && (
-              <div className="tk-panel">
-                <p className="tk-head">
-                  <span className="tk-title">テイクアウト</span>
-                </p>
-                <ul className="tk-list">
+              <section className="hcard tk-card">
+                <div className="hcard-head">
+                  <span className="tk-heading">テイクアウト</span>
+                  {takeoutNote && <span className="tk-note">{takeoutNote}</span>}
+                </div>
+                <ul className="tk-grid">
                   {takeout.map((t, j) => (
                     <li className="tk-item" key={j}>
                       <span className="tk-name">{t.name}</span>
                       <span className="tk-leader" aria-hidden="true" />
-                      {t.price && <span className="tk-price">{t.price}円</span>}
+                      {t.price && (
+                        <span className="tk-price">{formatPrice(t.price)}円</span>
+                      )}
                     </li>
                   ))}
                 </ul>
-                {takeoutNote && <p className="tk-note">{takeoutNote}</p>}
-              </div>
+              </section>
+            )}
+
+            {menu.length === 0 && takeout.length === 0 && (
+              <p className="h-empty">準備中です</p>
             )}
           </div>
+
+          <footer className="h-foot">
+            <span className="h-foot-lunch">ランチ</span>
+            <span className="h-foot-time">11:30〜14:00</span>
+            <span className="h-foot-lo">（L.o 13:10）</span>
+          </footer>
         </div>
       </div>
     </div>

@@ -6,6 +6,7 @@ type MenuItem = {
   dishes: string;
   price: string;
   note: string;
+  limit_note: string;
 };
 
 export async function POST(request: NextRequest) {
@@ -18,10 +19,10 @@ export async function POST(request: NextRequest) {
   for (let i = 0; i < body.length; i++) {
     const item = body[i];
     await env.DB.prepare(
-      `INSERT INTO lunch_menu (set_label, dishes, price, note, display_order)
-       VALUES (?, ?, ?, ?, ?)`
+      `INSERT INTO lunch_menu (set_label, dishes, price, note, limit_note, display_order)
+       VALUES (?, ?, ?, ?, ?, ?)`
     )
-      .bind(item.set_label, item.dishes, item.price, item.note, i + 1)
+      .bind(item.set_label, item.dishes, item.price, item.note, item.limit_note ?? "", i + 1)
       .run();
   }
 

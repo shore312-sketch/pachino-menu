@@ -7,12 +7,11 @@
 :root {
   --font-klee: var(--font-klee-var, 'Klee One'), 'Hiragino Kaku Gothic ProN', 'Yu Gothic', sans-serif;
   --font-mincho: var(--font-mincho-var, 'Shippori Mincho'), 'Hiragino Mincho ProN', 'Yu Mincho', 'YuMincho', serif;
-  --w-paper: #fbf8f1;
-  --w-ink: #241f1a;
-  --w-sub: #6b6156;
-  --w-rule: #d8cdb6;
-  --w-rule-soft: #ded3bd;
-  --w-red: #a63a32;
+  --h-paper: #fdfdfa;
+  --h-ink: #1c1a17;
+  --h-sub: #5c564e;
+  --h-rule: #2c2a26;
+  --h-red: #b3372b;
 }
 
 body {
@@ -20,7 +19,9 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* ---- お客さん向け御品書き画面 ----
+ul { list-style: none; }
+
+/* ---- お客さん向け画面（カード型・横書き） ----
    シート内の寸法はすべてcqw（シート幅基準）。
    コンテナ（.sheet）自身にはcqwを使わないこと。 */
 .paper-wrap {
@@ -29,7 +30,7 @@ body {
   justify-content: center;
   width: 100vw;
   min-height: 100vh;
-  background: linear-gradient(160deg, #ece5d6 0%, #e2d9c6 100%);
+  background: linear-gradient(160deg, #e9e5dc 0%, #ddd8cc 100%);
   padding: 2vmin;
 }
 
@@ -40,255 +41,248 @@ body {
   container-type: inline-size;
   position: relative;
   overflow: hidden;
-  background: var(--w-paper);
-  color: var(--w-ink);
+  background: var(--h-paper);
+  color: var(--h-ink);
   font-family: var(--font-mincho);
   border-radius: 4px;
   box-shadow: 0 2px 6px rgba(30, 24, 14, 0.15), 0 12px 30px rgba(30, 24, 14, 0.2);
 }
 
-.washi-frame {
+.h-frame {
   position: absolute;
-  inset: 4cqw;
-  border: 1px solid #c9bca4;
-  padding: 4cqw 3.5cqw;
+  inset: 0;
+  padding: 3cqw 4.5cqw 2.6cqw;
   display: flex;
   flex-direction: column;
 }
 
-.w-head {
+/* ---- ヘッダー ---- */
+.h-head {
+  flex: 0 0 auto;
+}
+
+.h-brand {
   text-align: center;
-  padding-bottom: 2.2cqw;
-  border-bottom: 1px solid var(--w-rule);
-}
-
-.w-eyebrow {
-  font-size: 2.6cqw;
-  line-height: 1.4;
-  letter-spacing: 0.5em;
-  text-indent: 0.5em;
-  color: var(--w-sub);
-  margin-bottom: 1.2cqw;
-}
-
-.w-title {
-  font-size: 6cqw;
-  line-height: 1.35;
+  font-size: 3.3cqw;
   font-weight: 700;
-  letter-spacing: 0.26em;
-  text-indent: 0.26em;
-}
-
-.w-date {
-  font-size: 2.9cqw;
-  line-height: 1.4;
-  letter-spacing: 0.2em;
-  color: var(--w-sub);
-  margin-top: 1cqw;
-}
-
-.w-body {
-  flex: 0 0 auto; /* 献立は内容ぶんの高さ。余白は下の営業時間ゾーンへ渡す */
-  display: flex;
-  flex-direction: row-reverse; /* A定食が右、和文の読み順どおり右→左 */
-  justify-content: space-evenly;
-  align-items: stretch;
-  padding-top: 2.4cqw;
-}
-
-.v-rule {
-  width: 1px;
-  background: var(--w-rule-soft);
-  margin: 2cqw 0;
-}
-
-.v-set {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2cqw;
-  min-width: 0;
-}
-
-.v-sethead {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1.4cqw;
-}
-
-.v-label {
-  font-size: 4.3cqw;
-  line-height: 1.4;
-  font-weight: 700;
-  letter-spacing: 0.28em;
-  text-indent: 0.28em;
-}
-
-.v-badge {
-  font-size: 2.4cqw;
-  line-height: 1.5;
-  color: var(--w-red);
-  border: 1px solid rgba(166, 58, 50, 0.55);
-  border-radius: 2px;
-  padding: 0.18em 0.7em;
-  letter-spacing: 0.14em;
-}
-
-.v-dishes {
-  height: 50cqw;
-  flex-shrink: 0;
-  writing-mode: vertical-rl;
-  font-size: 3.2cqw;
-  letter-spacing: 0.08em;
-  line-height: 1.6;
-}
-
-.v-price {
-  margin-top: auto;
-  font-size: 3.6cqw;
   line-height: 1.3;
+  letter-spacing: 0.14em;
+  padding-bottom: 0.8cqw;
+  border-bottom: 0.35cqw solid var(--h-rule);
+  margin: 0 5cqw 1.2cqw;
+}
+
+.h-brand-sub {
+  font-size: 2.5cqw;
   font-weight: 700;
+  letter-spacing: 0.08em;
+  margin-left: 0.6em;
+}
+
+.h-titlerow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 3cqw;
+  padding: 0 1cqw;
+}
+
+.h-title {
+  flex: 1 1 auto;
+  text-align: center;
+  font-size: 7.2cqw;
+  font-weight: 700;
+  line-height: 1.15;
   letter-spacing: 0.1em;
-  border-top: 1px solid var(--w-rule);
-  padding: 1.4cqw 2cqw 0;
+  text-indent: 0.1em;
 }
 
-.w-empty {
-  align-self: center;
-  margin: auto;
-  font-size: 3.4cqw;
-  letter-spacing: 0.3em;
-  color: var(--w-sub);
+.h-date {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4cqw;
+  font-weight: 700;
+  border-top: 0.3cqw solid var(--h-rule);
+  border-bottom: 0.3cqw solid var(--h-rule);
+  padding: 0.9cqw 1.4cqw;
 }
 
-/* ---- 下部：左=ランチ営業(円相)／右=テイクアウト(横書き) ---- */
-.w-footer {
+.h-date-md {
+  font-size: 3cqw;
+  line-height: 1.2;
+  letter-spacing: 0.12em;
+}
+
+.h-date-wd {
+  font-size: 2.3cqw;
+  line-height: 1.2;
+  letter-spacing: 0.1em;
+}
+
+/* ---- 定食カード ---- */
+.h-cards {
   flex: 1 1 0;
   min-height: 0;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 3cqw;
-  padding: 1cqw 1.5cqw 0;
-}
-
-/* ---- ランチ営業時間（円相＋筆文字） ---- */
-.w-hours {
-  flex: 0 0 auto;
-  display: grid;
-  place-items: center;
-  pointer-events: none;
-}
-
-.w-enso-wrap {
-  position: relative;
-  width: 38cqw;
-  height: 38cqw;
-  max-height: 100%;
-  aspect-ratio: 1;
-  display: grid;
-  place-items: center;
-}
-
-.w-enso {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  opacity: 0.95;
-}
-
-.w-hours-text {
-  position: relative;
-  display: flex;
   flex-direction: column;
+  justify-content: space-evenly;
+  gap: 1.5cqw;
+  padding: 1.3cqw 0 1.1cqw;
+}
+
+.hcard {
+  position: relative;
+  border: 0.35cqw solid var(--set-color, #24466e);
+  border-radius: 1.6cqw;
+  background: #fff;
+  padding: 1.5cqw 2.6cqw 1.4cqw;
+}
+
+.hcard-head {
+  display: flex;
   align-items: center;
-  gap: 0.9cqw;
-  /* 表題と同じ明朝体に揃える */
-  font-family: var(--font-mincho);
+  gap: 1.8cqw;
+  padding-bottom: 1cqw;
+  border-bottom: 0.25cqw solid rgba(44, 42, 38, 0.75);
+  margin-right: 10cqw; /* 右上の限定バッジと重ならないように */
+}
+
+.hcard-letter {
+  display: grid;
+  place-items: center;
+  width: 5.8cqw;
+  height: 5.8cqw;
+  background: var(--set-color, #24466e);
+  color: #fff;
+  font-size: 4.2cqw;
   font-weight: 700;
-  color: #171310;
-  text-align: center;
-}
-
-.w-hours-title {
-  font-size: 6.2cqw;
   line-height: 1;
-  letter-spacing: 0.22em;
-  text-indent: 0.22em;
-  -webkit-text-stroke: 0.22cqw #171310;
-  paint-order: stroke fill;
+  padding-bottom: 0.4cqw;
 }
 
-.w-hours-time {
-  font-size: 4cqw;
-  line-height: 1.1;
+.hcard-teishoku {
+  font-size: 4.2cqw;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  line-height: 1;
+}
+
+.hcard-sub {
+  font-size: 2.7cqw;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  line-height: 1.2;
+  color: var(--set-color, #24466e);
+  margin-left: 1.2cqw;
+}
+
+.hcard-limit {
+  position: absolute;
+  top: 1.3cqw;
+  right: 1.6cqw;
+  width: 9cqw;
+  height: 9cqw;
+  display: grid;
+  place-items: center;
+  background: var(--h-red);
+  color: #fff;
+  border-radius: 50%;
+  font-size: 2cqw;
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: 0.02em;
+  text-align: center;
+  padding: 0.6cqw;
+  overflow: hidden;
+}
+
+.hcard-body {
+  display: flex;
+  align-items: flex-end;
+  gap: 2cqw;
+  padding-top: 0.9cqw;
+}
+
+.hcard-dishes {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-size: 2.45cqw;
+  font-weight: 500;
+  line-height: 1.5;
+  letter-spacing: 0.05em;
+}
+
+.hcard-dishes li {
+  /* 折返し行も品名の頭に揃うぶら下げインデント */
+  padding-left: 1em;
+  text-indent: -1em;
+}
+
+.hcard-dishes li::before {
+  content: "・";
+}
+
+.hcard-price {
+  flex: 0 0 auto;
+  color: var(--set-color, #24466e);
+  font-weight: 700;
+  font-size: 3cqw;
+  line-height: 1;
   letter-spacing: 0.04em;
   white-space: nowrap;
-  -webkit-text-stroke: 0.14cqw #171310;
-  paint-order: stroke fill;
+  padding: 0 1cqw 0.6cqw 0;
 }
 
-.w-hours-lo {
-  font-size: 2.9cqw;
-  line-height: 1.1;
+.hcard-price-num {
+  font-size: 6.2cqw;
   letter-spacing: 0.02em;
-  white-space: nowrap;
-  color: #2c2620;
+  font-variant-numeric: tabular-nums;
+  margin-right: 0.12em;
 }
 
-/* ---- テイクアウト（横書き・円相の右） ---- */
-.tk-panel {
-  flex: 1 1 0;
-  min-width: 0;
-  align-self: center;
-  padding-left: 3cqw;
-  border-left: 1px solid rgba(166, 58, 50, 0.28);
+/* ---- テイクアウトカード ---- */
+.tk-card {
+  --set-color: var(--h-red);
+  padding-bottom: 1.4cqw;
 }
 
-.tk-head {
-  display: flex;
-  align-items: baseline;
-  flex-wrap: wrap;
-  gap: 0.5em 0.9em;
-  font-family: var(--font-mincho);
-  font-weight: 700;
+.tk-heading {
   font-size: 3.2cqw;
-  letter-spacing: 0.08em;
-  color: var(--w-red);
-  margin-bottom: 1.6cqw;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  line-height: 1.2;
+  color: var(--h-red);
 }
 
-.tk-title {
-  white-space: nowrap;
-}
-
-.tk-sub {
-  font-family: var(--font-mincho);
-  font-weight: 400;
-  font-size: 2cqw;
+.tk-note {
+  margin-left: auto;
+  font-size: 2.1cqw;
+  font-weight: 500;
+  line-height: 1.3;
   letter-spacing: 0.06em;
-  color: var(--w-red);
-  border: 1px solid rgba(166, 58, 50, 0.5);
+  color: var(--h-red);
+  border: 1px solid rgba(179, 55, 43, 0.5);
   border-radius: 3px;
-  padding: 0.15em 0.6em;
+  padding: 0.2em 0.7em;
   white-space: nowrap;
 }
 
-.tk-list {
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: 1cqw;
+.tk-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 5cqw;
+  row-gap: 0.5cqw;
+  padding-top: 0.9cqw;
 }
 
 .tk-item {
   display: flex;
   align-items: baseline;
-  font-size: 2.9cqw;
-  line-height: 1.2;
-  color: #241f1a;
+  font-size: 2.45cqw;
+  font-weight: 500;
+  line-height: 1.4;
 }
 
 .tk-name {
@@ -297,7 +291,7 @@ body {
 
 .tk-leader {
   flex: 1 1 auto;
-  margin: 0 0.7em;
+  margin: 0 0.6em;
   border-bottom: 1px dotted rgba(60, 50, 40, 0.4);
   transform: translateY(-0.3em);
 }
@@ -305,20 +299,45 @@ body {
 .tk-price {
   white-space: nowrap;
   font-variant-numeric: tabular-nums;
-  letter-spacing: 0.02em;
 }
 
-/* リストの下のひとこと（ご予約承ります 等・管理画面で編集可能） */
-.tk-note {
-  display: inline-block;
-  margin-top: 1.8cqw;
-  font-size: 2cqw;
-  line-height: 1.4;
+.h-empty {
+  align-self: center;
+  margin: auto;
+  font-size: 3.4cqw;
+  letter-spacing: 0.3em;
+  color: var(--h-sub);
+}
+
+/* ---- フッター（営業時間） ---- */
+.h-foot {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 2.5cqw;
+  border-top: 0.3cqw solid var(--h-rule);
+  padding-top: 1.2cqw;
+  font-weight: 700;
+}
+
+.h-foot-lunch {
+  font-size: 3.4cqw;
+  letter-spacing: 0.3em;
+  line-height: 1.2;
+}
+
+.h-foot-time {
+  font-size: 3.6cqw;
   letter-spacing: 0.06em;
-  color: var(--w-red);
-  border: 1px solid rgba(166, 58, 50, 0.5);
-  border-radius: 3px;
-  padding: 0.25em 0.7em;
+  line-height: 1.2;
+  font-variant-numeric: tabular-nums;
+}
+
+.h-foot-lo {
+  font-size: 2.6cqw;
+  letter-spacing: 0.04em;
+  line-height: 1.2;
 }
 
 .print-btn {
@@ -329,9 +348,9 @@ body {
   font-family: var(--font-mincho);
   font-size: 0.85rem;
   letter-spacing: 0.15em;
-  color: var(--w-sub);
-  background: rgba(251, 248, 241, 0.85);
-  border: 1px solid #c9bca4;
+  color: var(--h-sub);
+  background: rgba(253, 253, 250, 0.85);
+  border: 1px solid #c5bfb2;
   border-radius: 6px;
   padding: 0.45em 1em;
   cursor: pointer;

@@ -7,6 +7,7 @@ type MenuItem = {
   dishes: string;
   price: string;
   note: string;
+  limit_note: string;
 };
 
 type TakeoutItem = {
@@ -20,7 +21,7 @@ const TAKEOUT_DRAFT_KEY = "pachino-takeout-draft";
 const TAKEOUT_NOTE_DRAFT_KEY = "pachino-takeout-note-draft";
 const MAX_TAKEOUT = 8;
 
-const emptyItem = (): MenuItem => ({ dishes: "", price: "", note: "" });
+const emptyItem = (): MenuItem => ({ dishes: "", price: "", note: "", limit_note: "" });
 const emptyTakeout = (): TakeoutItem => ({ name: "", price: "" });
 
 export default function AdminPage() {
@@ -66,7 +67,12 @@ export default function AdminPage() {
         ]) => {
           setMenu(
             menuData.length > 0
-              ? menuData.map(({ dishes, price, note }) => ({ dishes, price, note }))
+              ? menuData.map(({ dishes, price, note, limit_note }) => ({
+                  dishes,
+                  price,
+                  note,
+                  limit_note: limit_note ?? "",
+                }))
               : [emptyItem()]
           );
           const items = takeoutData.items ?? [];
@@ -194,13 +200,24 @@ export default function AdminPage() {
             </div>
 
             <div className="field-group">
-              <label className="field-label">バッジ（省略可）</label>
+              <label className="field-label">肩書き（省略可・定食名の横に表示）</label>
               <input
                 className="field-input"
                 type="text"
                 value={item.note}
                 onChange={(e) => updateField(index, "note", e.target.value)}
-                placeholder="例: 1番人気　限定10食"
+                placeholder="例: ぱちーの定番　店主おすすめ"
+              />
+            </div>
+
+            <div className="field-group">
+              <label className="field-label">限定バッジ（省略可・右上の丸に表示）</label>
+              <input
+                className="field-input"
+                type="text"
+                value={item.limit_note}
+                onChange={(e) => updateField(index, "limit_note", e.target.value)}
+                placeholder="例: 限定3食!"
               />
             </div>
           </div>

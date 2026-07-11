@@ -1,0 +1,1 @@
+ALTER TABLE lunch_menu ADD COLUMN limit_note TEXT NOT NULL DEFAULT '';
