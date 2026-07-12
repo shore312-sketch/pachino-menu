@@ -216,15 +216,6 @@ ul { list-style: none; }
   letter-spacing: 0.05em;
 }
 
-.hcard-dishes li {
-  /* 折返し行も品名の頭に揃うぶら下げインデント */
-  padding-left: 1em;
-  text-indent: -1em;
-}
-
-.hcard-dishes li::before {
-  content: "・";
-}
 
 .hcard-price {
   flex: 0 0 auto;
