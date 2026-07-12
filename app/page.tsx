@@ -1,6 +1,6 @@
 "use client";
 
-import { CSSProperties, useEffect, useState } from "react";
+import { CSSProperties, useEffect, useRef, useState } from "react";
 
 type MenuItem = {
   set_label: string;
@@ -53,6 +53,36 @@ export default function MenuDisplay() {
   const [takeoutNote, setTakeoutNote] = useState("");
   const [date, setDate] = useState({ md: "", wd: "" });
 
+  const sheetRef = useRef<HTMLDivElement>(null);
+  const frameRef = useRef<HTMLDivElement>(null);
+
+  // 内容量（定食の数・料理の行数）に応じて全体を自動縮小し、
+  // 何品でも必ず1枚に収める（営業時間まで見切れない）
+  useEffect(() => {
+    const fit = () => {
+      const sheet = sheetRef.current;
+      const frame = frameRef.current;
+      if (!sheet || !frame) return;
+      frame.style.transform = "translate(-50%, -50%) scale(1)";
+      const sh = sheet.clientHeight;
+      const fh = frame.offsetHeight;
+      const scale = fh > sh ? sh / fh : 1;
+      frame.style.transform = `translate(-50%, -50%) scale(${scale})`;
+    };
+
+    fit();
+    // フォント読込・画像等の反映後にもう一度合わせる
+    const t = setTimeout(fit, 300);
+    const ro = new ResizeObserver(fit);
+    if (sheetRef.current) ro.observe(sheetRef.current);
+    window.addEventListener("resize", fit);
+    return () => {
+      clearTimeout(t);
+      ro.disconnect();
+      window.removeEventListener("resize", fit);
+    };
+  }, [menu, takeout, takeoutNote, date]);
+
   async function fetchMenu() {
     try {
       const [menuRes, takeoutRes] = await Promise.all([
@@ -89,8 +119,8 @@ export default function MenuDisplay() {
         印刷
       </button>
 
-      <div className="sheet">
-        <div className="h-frame">
+      <div className="sheet" ref={sheetRef}>
+        <div className="h-frame" ref={frameRef}>
           <header className="h-head">
             <p className="h-brand">
               ぱちーの<span className="h-brand-sub">〜地の食と水〜</span>
